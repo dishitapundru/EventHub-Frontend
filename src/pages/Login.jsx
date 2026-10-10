@@ -1,3 +1,4 @@
+
 import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
@@ -5,7 +6,6 @@ import {
   Mail,
   Sparkles,
   Clock3,
-  LogOut,
 } from "lucide-react";
 import { useState } from "react";
 import "./Auth.css";
@@ -27,9 +27,20 @@ function Login() {
     setError("");
     setLoading(true);
 
+    // Read the API URL from the Vite environment.
+    const apiUrl = import.meta.env.VITE_API_URL?.trim();
+
+    if (!apiUrl || apiUrl.includes("undefined")) {
+      setError(
+        "API URL is not configured. Please configure VITE_API_URL and restart the frontend."
+      );
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/auth/login`,
+        `${apiUrl.replace(/\/+$/, "")}/auth/login`,
         {
           method: "POST",
           headers: {
@@ -37,7 +48,7 @@ function Login() {
           },
           body: JSON.stringify({
             email: email.trim(),
-            password: password,
+            password,
           }),
         }
       );
@@ -53,39 +64,54 @@ function Login() {
       }
 
       if (!response.ok) {
-        setError(
-          "Incorrect email or password. Please check your credentials and try again."
-        );
+        console.error("Login request failed:", {
+          status: response.status,
+          response: data,
+        });
 
-        setLoading(false);
+        if (response.status === 404) {
+          setError(
+            "Login endpoint not found. Please check the backend URL and login endpoint."
+          );
+        } else if (
+          response.status === 401 ||
+          response.status === 403
+        ) {
+          setError(
+            "Incorrect email or password. Please check your credentials and try again."
+          );
+        } else {
+          setError(
+            `Login failed (${response.status}). Please try again or check the backend.`
+          );
+        }
+
+        return;
+      }
+
+      if (!data || typeof data !== "object") {
+        setError("The server returned an unexpected login response.");
         return;
       }
 
       console.log("Logged in user:", data);
 
-      // ==========================================
-      // PENDING CLUB
-      // ==========================================
-
+      // Handle clubs waiting for administrator approval.
       if (
         data.role === "CLUB" &&
         data.status === "PENDING"
       ) {
         setPendingClub(true);
-        setLoading(false);
         return;
       }
 
-      // ==========================================
-      // APPROVED LOGIN
-      // ==========================================
-
+      // Store the authenticated user's information.
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("user", JSON.stringify(data));
 
       setMessage("Login successful!");
-      setLoading(false);
 
+      // Navigate according to the user's role.
       setTimeout(() => {
         if (data.role === "ADMIN") {
           navigate("/admin");
@@ -94,28 +120,24 @@ function Login() {
         } else {
           navigate("/dashboard");
         }
-      }, 1000);
-
-    } catch (error) {
-      console.error("Login error:", error);
+      }, 500);
+    } catch (err) {
+      console.error("Login connection error:", err);
 
       setError(
-        "Unable to connect to the server. Please try again later."
+        "Unable to connect to the server. Check the API URL, backend status, and CORS configuration."
       );
-
+    } finally {
       setLoading(false);
     }
   };
 
-  // ==========================================
-  // CLUB WAITING FOR APPROVAL SCREEN
-  // ==========================================
-
+  // Club account waiting for approval.
   if (pendingClub) {
     return (
       <div className="auth-page">
-
         <button
+          type="button"
           className="back-button"
           onClick={() => setPendingClub(false)}
         >
@@ -124,17 +146,14 @@ function Login() {
         </button>
 
         <div className="auth-card">
-
           <div className="auth-brand">
             <div className="brand-icon">
               <Sparkles size={22} />
             </div>
-
             <span>EventHub</span>
           </div>
 
           <div className="auth-heading">
-
             <div
               style={{
                 width: "64px",
@@ -158,10 +177,9 @@ function Login() {
             </p>
 
             <p style={{ marginTop: "10px" }}>
-              Your account is currently waiting for approval
-              from an EventHub administrator.
+              Your account is waiting for approval from an
+              EventHub administrator.
             </p>
-
           </div>
 
           <div
@@ -177,16 +195,14 @@ function Login() {
               lineHeight: "1.6",
             }}
           >
-            You will be able to access the Club Dashboard
-            once an administrator approves your account.
+            You will be able to access the Club Dashboard once
+            an administrator approves your account.
           </div>
 
           <button
             type="button"
             className="auth-submit"
-            style={{
-              marginTop: "24px",
-            }}
+            style={{ marginTop: "24px" }}
             onClick={() => setPendingClub(false)}
           >
             Back to Login
@@ -195,7 +211,6 @@ function Login() {
           <p className="auth-switch">
             Need help? Contact your EventHub administrator.
           </p>
-
         </div>
       </div>
     );
@@ -203,8 +218,8 @@ function Login() {
 
   return (
     <div className="auth-page">
-
       <button
+        type="button"
         className="back-button"
         onClick={() => navigate("/")}
       >
@@ -213,12 +228,10 @@ function Login() {
       </button>
 
       <div className="auth-card">
-
         <div className="auth-brand">
           <div className="brand-icon">
             <Sparkles size={22} />
           </div>
-
           <span>EventHub</span>
         </div>
 
@@ -228,37 +241,37 @@ function Login() {
         </div>
 
         <form onSubmit={handleLogin}>
-
-          <label>Email address</label>
+          <label htmlFor="email">Email address</label>
 
           <div className="input-wrapper">
             <Mail size={18} />
-
             <input
+              id="email"
               type="email"
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="username"
               required
             />
           </div>
 
-          <label>Password</label>
+          <label htmlFor="password">Password</label>
 
           <div className="input-wrapper">
             <Lock size={18} />
-
             <input
+              id="password"
               type="password"
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
               required
             />
           </div>
 
           <div className="form-options">
-
             <label className="remember">
               <input type="checkbox" />
               Remember me
@@ -267,20 +280,24 @@ function Login() {
             <button
               type="button"
               className="forgot"
+              onClick={() =>
+                setError(
+                  "Please contact your administrator to reset your password."
+                )
+              }
             >
               Forgot password?
             </button>
-
           </div>
 
           {error && (
-            <p className="auth-error">
+            <p className="auth-error" role="alert">
               {error}
             </p>
           )}
 
           {message && (
-            <p className="auth-success">
+            <p className="auth-success" role="status">
               {message}
             </p>
           )}
@@ -292,16 +309,12 @@ function Login() {
           >
             {loading ? "Signing In..." : "Sign In"}
           </button>
-
         </form>
 
         <p className="auth-switch">
           Don't have an account?{" "}
-          <Link to="/register">
-            Create an account
-          </Link>
+          <Link to="/register">Create an account</Link>
         </p>
-
       </div>
     </div>
   );

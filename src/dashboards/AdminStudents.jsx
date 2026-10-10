@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -24,10 +25,7 @@ function AdminStudents() {
   const [search, setSearch] = useState("");
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // =========================
-  // LOAD STUDENTS
-  // =========================
+  const [loadError, setLoadError] = useState("");
 
   useEffect(() => {
     if (!user || user.role !== "ADMIN") {
@@ -41,48 +39,54 @@ function AdminStudents() {
   const loadStudents = async () => {
     try {
       setLoading(true);
+      setLoadError("");
 
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/students`
-      );
+      const apiUrl = import.meta.env.VITE_API_URL;
+
+      if (!apiUrl) {
+        throw new Error("VITE_API_URL is not configured.");
+      }
+
+      const response = await fetch(`${apiUrl}/students`);
 
       if (!response.ok) {
-        throw new Error("Failed to load students");
+        throw new Error(
+          `Failed to load students (${response.status}).`
+        );
       }
 
       const data = await response.json();
 
+      if (!Array.isArray(data)) {
+        throw new Error("Unexpected student data returned by the server.");
+      }
+
+      console.log("Student API response:", data);
+
       const formattedStudents = data.map((student) => ({
         id: student.id,
-        name: student.name,
-        email: student.email,
+        name: student.name || "Unnamed Student",
+        email: student.email || "No email",
         department:
-          student.department || "Not available",
-        year: student.year || "Not available",
+          student.department?.trim() || "Not provided",
+        year: student.year?.trim() || "Not provided",
         status: student.status || "Active",
       }));
 
       setStudents(formattedStudents);
     } catch (error) {
       console.error("Student loading error:", error);
+      setLoadError(error.message || "Unable to load students.");
     } finally {
       setLoading(false);
     }
   };
-
-  // =========================
-  // LOGOUT
-  // =========================
 
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("user");
     navigate("/login");
   };
-
-  // =========================
-  // DELETE STUDENT
-  // =========================
 
   const deleteStudent = async (id) => {
     const student = students.find(
@@ -98,13 +102,11 @@ function AdminStudents() {
     try {
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/students/${id}`,
-        {
-          method: "DELETE",
-        }
+        { method: "DELETE" }
       );
 
       if (!response.ok) {
-        throw new Error("Failed to delete student");
+        throw new Error("Failed to delete student.");
       }
 
       setStudents((currentStudents) =>
@@ -120,10 +122,6 @@ function AdminStudents() {
     }
   };
 
-  // =========================
-  // VIEW STUDENT
-  // =========================
-
   const viewStudent = (student) => {
     alert(
       `Student Details\n\n` +
@@ -135,46 +133,26 @@ function AdminStudents() {
     );
   };
 
-  // =========================
-  // SEARCH
-  // =========================
-
   const filteredStudents = students.filter((student) =>
-    `${student.name} ${student.email} ${student.department}`
+    `${student.name} ${student.email} ${student.department} ${student.year}`
       .toLowerCase()
       .includes(search.toLowerCase())
   );
 
-  // =========================
-  // PAGE
-  // =========================
-
   return (
     <div className="admin-module-page">
-
-      {/* =========================
-          SIDEBAR
-      ========================= */}
-
       <aside className="admin-sidebar">
-
         <div className="admin-brand">
-          <div className="admin-brand-icon">
-            ✦
-          </div>
-
+          <div className="admin-brand-icon">✦</div>
           <div>
             <span>EventHub</span>
             <small>ADMIN PANEL</small>
           </div>
         </div>
 
-        <div className="admin-menu-title">
-          MAIN MENU
-        </div>
+        <div className="admin-menu-title">MAIN MENU</div>
 
         <nav className="admin-nav">
-
           <button
             className="admin-nav-item"
             onClick={() => navigate("/admin")}
@@ -206,14 +184,11 @@ function AdminStudents() {
 
           <button
             className="admin-nav-item"
-            onClick={() =>
-              navigate("/admin/notifications")
-            }
+            onClick={() => navigate("/admin/notifications")}
           >
             <Bell size={19} />
             <span>Notifications</span>
           </button>
-
         </nav>
 
         <div className="admin-menu-title admin-secondary-title">
@@ -221,7 +196,6 @@ function AdminStudents() {
         </div>
 
         <nav className="admin-nav">
-
           <button
             className="admin-nav-item"
             onClick={() => navigate("/admin/profile")}
@@ -229,205 +203,107 @@ function AdminStudents() {
             <UserCircle size={19} />
             <span>My Profile</span>
           </button>
-
         </nav>
 
         <div className="admin-sidebar-bottom">
-
           <div className="admin-sidebar-user">
-
             <div className="admin-user-avatar">
-              {user?.name?.charAt(0).toUpperCase() ||
-                "A"}
+              {user?.name?.charAt(0).toUpperCase() || "A"}
             </div>
 
             <div className="admin-user-info">
-
-              <strong>
-                {user?.name || "EventHub Admin"}
-              </strong>
-
-              <span>
-                Administrator
-              </span>
-
+              <strong>{user?.name || "EventHub Admin"}</strong>
+              <span>Administrator</span>
             </div>
-
           </div>
 
-          <button
-            className="admin-logout"
-            onClick={handleLogout}
-          >
+          <button className="admin-logout" onClick={handleLogout}>
             <LogOut size={18} />
             Logout
           </button>
-
         </div>
-
       </aside>
 
-      {/* =========================
-          MAIN
-      ========================= */}
-
       <main className="admin-module-main">
-
         <header className="admin-module-header">
-
           <div>
-
             <span className="admin-module-kicker">
               STUDENT MANAGEMENT
             </span>
-
-            <h1>
-              Students
-            </h1>
-
+            <h1>Students</h1>
             <p>
-              View and manage students registered on
-              EventHub.
+              View and manage students registered on EventHub.
             </p>
-
           </div>
 
           <div className="admin-header-count">
-
             <Users size={19} />
-
-            <strong>
-              {students.length}
-            </strong>
-
-            <span>
-              Students
-            </span>
-
+            <strong>{students.length}</strong>
+            <span>Students</span>
           </div>
-
         </header>
 
-        {/* =========================
-            STUDENT TABLE
-        ========================= */}
-
         <section className="admin-module-card">
-
           <div className="admin-card-toolbar">
-
             <div>
-
-              <h2>
-                Registered Students
-              </h2>
-
+              <h2>Registered Students</h2>
               <span>
                 Manage student accounts and information
               </span>
-
             </div>
 
             <div className="admin-search-box">
-
               <Search size={17} />
-
               <input
                 type="text"
                 placeholder="Search students..."
                 value={search}
-                onChange={(e) =>
-                  setSearch(e.target.value)
-                }
+                onChange={(e) => setSearch(e.target.value)}
               />
-
             </div>
-
           </div>
 
           <div className="admin-student-table">
-
             <div className="admin-table-header">
-
-              <span>
-                STUDENT
-              </span>
-
-              <span>
-                DEPARTMENT
-              </span>
-
-              <span>
-                YEAR
-              </span>
-
-              <span>
-                STATUS
-              </span>
-
-              <span>
-                ACTIONS
-              </span>
-
+              <span>STUDENT</span>
+              <span>DEPARTMENT</span>
+              <span>YEAR</span>
+              <span>STATUS</span>
+              <span>ACTIONS</span>
             </div>
 
             {loading ? (
-
               <div className="admin-table-row">
-
-                <span>
-                  Loading students...
-                </span>
-
+                <span>Loading students...</span>
               </div>
-
+            ) : loadError ? (
+              <div className="admin-table-row">
+                <span>{loadError}</span>
+              </div>
             ) : filteredStudents.length === 0 ? (
-
               <div className="admin-table-row">
-
-                <span>
-                  No students found.
-                </span>
-
+                <span>No students found.</span>
               </div>
-
             ) : (
-
               filteredStudents.map((student) => (
-
                 <div
                   className="admin-table-row"
                   key={student.id}
                 >
-
                   <div className="admin-student-name-cell">
-
                     <div className="admin-student-avatar">
-                      {student.name
-                        .charAt(0)
-                        .toUpperCase()}
+                      {student.name.charAt(0).toUpperCase()}
                     </div>
 
                     <div>
-
-                      <strong>
-                        {student.name}
-                      </strong>
-
-                      <span>
-                        {student.email}
-                      </span>
-
+                      <strong>{student.name}</strong>
+                      <span>{student.email}</span>
                     </div>
-
                   </div>
 
                   <div className="admin-department">
-
                     <GraduationCap size={16} />
-
-                    {student.department}
-
+                    <span>{student.department}</span>
                   </div>
 
                   <div className="admin-year">
@@ -435,21 +311,16 @@ function AdminStudents() {
                   </div>
 
                   <div>
-
                     <span className="admin-status-badge">
                       {student.status}
                     </span>
-
                   </div>
 
                   <div className="admin-row-actions">
-
                     <button
                       className="admin-view-button"
                       title="View Student"
-                      onClick={() =>
-                        viewStudent(student)
-                      }
+                      onClick={() => viewStudent(student)}
                     >
                       <Eye size={16} />
                     </button>
@@ -457,27 +328,17 @@ function AdminStudents() {
                     <button
                       className="admin-delete-button"
                       title="Delete Student"
-                      onClick={() =>
-                        deleteStudent(student.id)
-                      }
+                      onClick={() => deleteStudent(student.id)}
                     >
                       <Trash2 size={16} />
                     </button>
-
                   </div>
-
                 </div>
-
               ))
-
             )}
-
           </div>
-
         </section>
-
       </main>
-
     </div>
   );
 }

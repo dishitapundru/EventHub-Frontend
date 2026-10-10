@@ -1,12 +1,62 @@
+
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Users, Sparkles } from "lucide-react";
 import "./Clubs.css";
 
 function Clubs() {
+  const [clubs, setClubs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchClubs = async () => {
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL;
+
+        if (!apiUrl) {
+          throw new Error("API URL is not configured.");
+        }
+
+        const response = await fetch(`${apiUrl}/clubs`, {
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch clubs (${response.status}).`);
+        }
+
+        const data = await response.json();
+
+        const activeClubs = (Array.isArray(data) ? data : []).filter(
+          (club) =>
+            String(club.status || "").toUpperCase() === "ACTIVE"
+        );
+
+        setClubs(activeClubs);
+        setError("");
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          console.error("Error fetching clubs:", err);
+          setError("Unable to load clubs. Please try again later.");
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchClubs();
+
+    return () => controller.abort();
+  }, []);
+
   return (
     <div className="clubs-page">
       <div className="clubs-container">
-
         <Link to="/" className="clubs-back">
           <ArrowLeft size={18} />
           Back to Home
@@ -16,80 +66,49 @@ function Clubs() {
           <span>EVENTHUB</span>
           <h1>Discover Campus Clubs</h1>
           <p>
-            Connect with student communities and discover clubs that match
-            your interests.
+            Explore campus clubs and read the information provided by
+            each club owner.
           </p>
         </div>
 
-        <div className="clubs-grid">
+        {loading ? (
+          <p className="clubs-message">Loading clubs...</p>
+        ) : error ? (
+          <p className="clubs-message">{error}</p>
+        ) : clubs.length === 0 ? (
+          <p className="clubs-message">
+            No active clubs are available at the moment.
+          </p>
+        ) : (
+          <div className="clubs-grid">
+            {clubs.map((club) => (
+              <div className="club-card" key={club.id}>
+                <div className="club-icon">
+                  <Sparkles size={25} />
+                </div>
 
-          <div className="club-card">
-            <div className="club-icon">
-              <Sparkles size={25} />
-            </div>
+                <h2>{club.name}</h2>
 
-            <h2>Code Club</h2>
+                <p>
+                  {club.about?.trim() ||
+                    "No club description added yet."}
+                </p>
 
-            <p>
-              Learn programming, participate in coding contests and build
-              exciting projects.
-            </p>
+                <div className="club-members">
+                  <Users size={17} />
+                  {club.members ?? 0} Members
+                </div>
 
-            <div className="club-members">
-              <Users size={17} />
-              120 Members
-            </div>
-
-            <Link to="/clubs/code-club" className="club-view">
-  View Club
-</Link>
+                <Link
+                  to={`/clubs/${club.id}`}
+                  className="club-view"
+                >
+                  View Club
+                </Link>
+              </div>
+            ))}
           </div>
-
-          <div className="club-card">
-            <div className="club-icon">
-              <Sparkles size={25} />
-            </div>
-
-            <h2>AI & Robotics Club</h2>
-
-            <p>
-              Explore artificial intelligence, machine learning and robotics
-              through hands-on activities.
-            </p>
-
-            <div className="club-members">
-              <Users size={17} />
-              95 Members
-            </div>
-
-           <Link to="/clubs/ai-robotics" className="club-view">
-  View Club
-</Link>
-          </div>
-
-          <div className="club-card">
-            <div className="club-icon">
-              <Sparkles size={25} />
-            </div>
-
-            <h2>Cultural Club</h2>
-
-            <p>
-              Participate in cultural events, performances and activities
-              across campus.
-            </p>
-
-            <div className="club-members">
-              <Users size={17} />
-              150 Members
-            </div>
-
-            <Link to="/clubs/cultural" className="club-view">
-  View Club
-</Link>
-          </div>
-
-        </div>
+        )}
       </div>
     </div>
   );

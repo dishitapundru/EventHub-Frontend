@@ -19,6 +19,8 @@ function Register() {
     email: "",
     password: "",
     role: "STUDENT",
+    department: "",
+    year: "",
   });
 
   const [message, setMessage] = useState("");
@@ -36,27 +38,45 @@ function Register() {
     setFormData({
       ...formData,
       role,
+      department: role === "STUDENT" ? formData.department : "",
+      year: role === "STUDENT" ? formData.year : "",
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setMessage("");
     setError("");
     setLoading(true);
 
+    const apiUrl = import.meta.env.VITE_API_URL;
+
+    if (!apiUrl) {
+      setError("API URL is not configured. Check your frontend .env file.");
+      setLoading(false);
+      return;
+    }
+
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/auth/register`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const payload = {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        password: formData.password,
+        role: formData.role,
+      };
+
+      if (formData.role === "STUDENT") {
+        payload.department = formData.department;
+        payload.year = formData.year;
+      }
+
+      const response = await fetch(`${apiUrl}/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
 
       const data = await response.text();
 
@@ -64,22 +84,17 @@ function Register() {
         throw new Error(data || "Registration failed");
       }
 
-      if (formData.role === "CLUB") {
-        setMessage(
-          "Club account created successfully! Your account is waiting for admin approval."
-        );
-      } else {
-        setMessage("Account created successfully!");
-      }
+      setMessage(
+        formData.role === "CLUB"
+          ? "Club account created successfully! Your account is waiting for admin approval."
+          : "Account created successfully!"
+      );
 
-      setTimeout(() => {
-        navigate("/login");
-      }, 1800);
-    } catch (error) {
-      console.error("Registration error:", error);
-
+      setTimeout(() => navigate("/login"), 1800);
+    } catch (err) {
+      console.error("Registration error:", err);
       setError(
-        error.message || "Unable to create your account. Please try again."
+        err.message || "Unable to create your account. Please try again."
       );
     } finally {
       setLoading(false);
@@ -88,8 +103,8 @@ function Register() {
 
   return (
     <div className="auth-page">
-
       <button
+        type="button"
         className="back-button"
         onClick={() => navigate("/")}
       >
@@ -98,41 +113,22 @@ function Register() {
       </button>
 
       <div className="auth-card">
-
-        {/* Brand */}
-
         <div className="auth-brand">
-
           <div className="brand-icon">
             <Building2 size={21} />
           </div>
-
           <span>EventHub</span>
-
         </div>
 
-        {/* Heading */}
-
         <div className="auth-heading">
-
           <h1>Create your account</h1>
-
-          <p>
-            Join your campus community
-          </p>
-
+          <p>Join your campus community</p>
         </div>
 
         <form onSubmit={handleSubmit}>
-
-          {/* Full Name */}
-
           <label>Full Name</label>
-
           <div className="input-wrapper">
-
             <User size={18} />
-
             <input
               type="text"
               name="name"
@@ -141,17 +137,11 @@ function Register() {
               onChange={handleChange}
               required
             />
-
           </div>
 
-          {/* Email */}
-
           <label>Email Address</label>
-
           <div className="input-wrapper">
-
             <Mail size={18} />
-
             <input
               type="email"
               name="email"
@@ -160,17 +150,11 @@ function Register() {
               onChange={handleChange}
               required
             />
-
           </div>
 
-          {/* Password */}
-
           <label>Password</label>
-
           <div className="input-wrapper">
-
             <Lock size={18} />
-
             <input
               type="password"
               name="password"
@@ -179,123 +163,101 @@ function Register() {
               onChange={handleChange}
               required
             />
-
           </div>
 
-          {/* Register As */}
-
           <label>Register As</label>
-
           <div className="role-selection">
-
-            {/* Student */}
-
             <button
               type="button"
               className={`role-card ${
-                formData.role === "STUDENT"
-                  ? "selected"
-                  : ""
+                formData.role === "STUDENT" ? "selected" : ""
               }`}
-              onClick={() =>
-                handleRoleChange("STUDENT")
-              }
+              onClick={() => handleRoleChange("STUDENT")}
             >
-
               <div className="role-icon">
                 <GraduationCap size={22} />
               </div>
-
               <div className="role-content">
-
-                <strong>
-                  Student
-                </strong>
-
-                <span>
-                  Join events and clubs
-                </span>
-
+                <strong>Student</strong>
+                <span>Join events and clubs</span>
               </div>
-
             </button>
-
-            {/* Club */}
 
             <button
               type="button"
               className={`role-card ${
-                formData.role === "CLUB"
-                  ? "selected"
-                  : ""
+                formData.role === "CLUB" ? "selected" : ""
               }`}
-              onClick={() =>
-                handleRoleChange("CLUB")
-              }
+              onClick={() => handleRoleChange("CLUB")}
             >
-
               <div className="role-icon">
                 <Building2 size={22} />
               </div>
-
               <div className="role-content">
-
-                <strong>
-                  Club
-                </strong>
-
-                <span>
-                  Manage events and members
-                </span>
-
+                <strong>Club</strong>
+                <span>Manage events and members</span>
               </div>
-
             </button>
-
           </div>
 
-          {/* Messages */}
+          {formData.role === "STUDENT" && (
+            <>
+              <label>Department</label>
+              <div className="input-wrapper">
+                <GraduationCap size={18} />
+                <select
+                  name="department"
+                  value={formData.department}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select your department</option>
+                  <option value="CSE">CSE</option>
+                  <option value="CSE (AI & ML)">CSE (AI &amp; ML)</option>
+                  <option value="CSE (Data Science)">CSE (Data Science)</option>
+                  <option value="ECE">ECE</option>
+                  <option value="EEE">EEE</option>
+                  <option value="Mechanical">Mechanical</option>
+                  <option value="Civil">Civil</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
 
-          {error && (
-            <p className="auth-error">
-              {error}
-            </p>
+              <label>Academic Year</label>
+              <div className="input-wrapper">
+                <GraduationCap size={18} />
+                <select
+                  name="year"
+                  value={formData.year}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select your year</option>
+                  <option value="1st Year">1st Year</option>
+                  <option value="2nd Year">2nd Year</option>
+                  <option value="3rd Year">3rd Year</option>
+                  <option value="4th Year">4th Year</option>
+                </select>
+              </div>
+            </>
           )}
 
-          {message && (
-            <p className="auth-success">
-              {message}
-            </p>
-          )}
-
-          {/* Submit */}
+          {error && <p className="auth-error">{error}</p>}
+          {message && <p className="auth-success">{message}</p>}
 
           <button
             type="submit"
             className="auth-submit"
             disabled={loading}
           >
-            {loading
-              ? "Creating Account..."
-              : "Create Account"}
+            {loading ? "Creating Account..." : "Create Account"}
           </button>
-
         </form>
 
-        {/* Login */}
-
         <p className="auth-switch">
-
-          Already have an account?{" "}
-
-          <Link to="/login">
-            Login
-          </Link>
-
+          Already have an account? <Link to="/login">Login</Link>
         </p>
-
       </div>
-
     </div>
   );
 }

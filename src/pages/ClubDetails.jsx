@@ -1,4 +1,7 @@
+
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+
 import {
   ArrowLeft,
   Users,
@@ -7,304 +10,298 @@ import {
   CheckCircle,
   Building2,
   Clock,
+  RefreshCw,
 } from "lucide-react";
+
 import "./ClubDetails.css";
+
+const API_URL = import.meta.env.VITE_API_URL;
+
+function getLines(value) {
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => String(item ?? "").trim())
+      .filter(Boolean);
+  }
+
+  if (typeof value !== "string" || !value.trim()) {
+    return [];
+  }
+
+  return value
+    .split(/\r?\n/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function getText(value) {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function getMemberCount(club) {
+  if (typeof club.membersCount === "number") {
+    return club.membersCount;
+  }
+
+  if (typeof club.memberCount === "number") {
+    return club.memberCount;
+  }
+
+  if (Array.isArray(club.members)) {
+    return club.members.length;
+  }
+
+  if (typeof club.members === "number") {
+    return club.members;
+  }
+
+  return 0;
+}
 
 function ClubDetails() {
   const navigate = useNavigate();
   const { clubId } = useParams();
 
-  const clubs = {
-    1: {
-      name: "Coding Club",
-      category: "Technology",
-      members: 128,
-      description:
-        "The Coding Club is a community of students passionate about programming, software development, problem solving and competitive coding.",
-      about:
-        "The Coding Club provides a collaborative environment where students can improve their programming skills, participate in coding competitions, build software projects and learn from experienced peers.",
-      history:
-        "The Coding Club was created to bring together students interested in programming and technology. Since its beginning, the club has conducted coding contests, development workshops and hackathon preparation sessions.",
-      achievements: [
-        "Organized multiple campus coding contests",
-        "Conducted programming and DSA workshops",
-        "Students participated in national-level hackathons",
-        "Conducted hackathon preparation sessions",
-      ],
-      pastEvents: [
-        "CodeSprint 2026",
-        "Competitive Programming Workshop",
-        "Git & GitHub Bootcamp",
-      ],
-    },
+  const [club, setClub] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-    2: {
-      name: "AI Club",
-      category: "Artificial Intelligence",
-      members: 96,
-      description:
-        "The AI Club is a student community focused on Artificial Intelligence, Machine Learning, Generative AI and emerging technologies.",
-      about:
-        "The AI Club helps students explore AI concepts through workshops, projects, discussions and practical demonstrations. Members can collaborate on AI and Machine Learning projects.",
-      history:
-        "The AI Club was formed to create a dedicated community for students interested in Artificial Intelligence and Machine Learning. The club regularly conducts technical sessions and project activities.",
-      achievements: [
-        "Conducted AI and Machine Learning workshops",
-        "Organized Generative AI project sessions",
-        "Supported students in AI hackathons",
-        "Conducted hands-on AI demonstrations",
-      ],
-      pastEvents: [
-        "Introduction to Generative AI",
-        "Machine Learning Workshop",
-        "AI Project Showcase",
-      ],
-    },
+  useEffect(() => {
+    const controller = new AbortController();
 
-    3: {
-      name: "Design Club",
-      category: "Design",
-      members: 74,
-      description:
-        "The Design Club is a creative community for students interested in UI/UX, graphic design and digital creativity.",
-      about:
-        "The Design Club gives students an opportunity to explore UI/UX design, visual communication, branding and creative digital work.",
-      history:
-        "The club was created to encourage creativity and design thinking among students through workshops, design challenges and collaborative projects.",
-      achievements: [
-        "Conducted UI/UX design workshops",
-        "Organized campus design challenges",
-        "Created designs for student events",
-        "Conducted creative portfolio sessions",
-      ],
-      pastEvents: [
-        "UI/UX Design Workshop",
-        "Figma Design Challenge",
-        "Creative Portfolio Session",
-      ],
-    },
+    const fetchClub = async () => {
+      if (!API_URL) {
+        setError("The backend API URL is not configured.");
+        setLoading(false);
+        return;
+      }
 
-    4: {
-      name: "Sports Club",
-      category: "Sports",
-      members: 156,
-      description:
-        "The Sports Club brings together students interested in sports, fitness, competitions and campus tournaments.",
-      about:
-        "The Sports Club promotes teamwork, fitness and healthy competition through sports activities and inter-college events.",
-      history:
-        "The club has been a platform for students to participate in campus sports and represent the university in competitions.",
-      achievements: [
-        "Organized inter-department tournaments",
-        "Conducted annual sports competitions",
-        "Supported university sports teams",
-        "Conducted fitness activities",
-      ],
-      pastEvents: [
-        "Annual Sports Meet",
-        "Inter-Department Cricket Tournament",
-        "Campus Football Championship",
-      ],
-    },
+      setLoading(true);
+      setError("");
+      setClub(null);
 
-    5: {
-      name: "Music Club",
-      category: "Arts & Culture",
-      members: 68,
-      description:
-        "The Music Club is a community for singers, musicians and students passionate about music and performances.",
-      about:
-        "The Music Club provides students with opportunities to practice, collaborate and perform at university events.",
-      history:
-        "The club was created to provide a platform for students with musical interests and encourage cultural activities on campus.",
-      achievements: [
-        "Performed at university cultural events",
-        "Organized student music sessions",
-        "Conducted open mic activities",
-        "Participated in cultural competitions",
-      ],
-      pastEvents: [
-        "Campus Open Mic",
-        "Freshers Cultural Night",
-        "Music Jam Session",
-      ],
-    },
+      try {
+        const baseUrl = API_URL.replace(/\/$/, "");
+
+        const response = await fetch(
+          `${baseUrl}/clubs/${encodeURIComponent(clubId)}`,
+          {
+            signal: controller.signal,
+            headers: {
+              Accept: "application/json",
+            },
+          }
+        );
+
+        if (response.status === 404) {
+          throw new Error("Club not found.");
+        }
+
+        if (!response.ok) {
+          throw new Error(
+            `Unable to load club details (${response.status}).`
+          );
+        }
+
+        const data = await response.json();
+
+        if (!data || typeof data !== "object") {
+          throw new Error("Invalid club details received.");
+        }
+
+        if (!controller.signal.aborted) {
+          setClub(data);
+        }
+      } catch (err) {
+        if (err.name !== "AbortError" && !controller.signal.aborted) {
+          console.error("Error loading club:", err);
+          setError(
+            err.message || "Unable to load club details."
+          );
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    if (!clubId) {
+      setError("Club ID is missing.");
+      setLoading(false);
+    } else {
+      fetchClub();
+    }
+
+    return () => controller.abort();
+  }, [clubId]);
+
+  const goBack = () => {
+    navigate("/my-clubs");
   };
 
-  const club = clubs[clubId];
-
-  if (!club) {
+  if (loading) {
     return (
       <div className="club-details-page">
         <div className="club-not-found">
-          <h2>Club not found</h2>
+          <RefreshCw size={25} />
+          <p>Loading club details...</p>
+        </div>
+      </div>
+    );
+  }
 
-          <button onClick={() => navigate("/my-clubs")}>
-            Back to Clubs
+  if (error || !club) {
+    return (
+      <div className="club-details-page">
+        <div className="club-not-found">
+          <h2>{error || "Club not found."}</h2>
+
+          <p>
+            Please check your connection and try opening the club again.
+          </p>
+
+          <button onClick={goBack}>
+            <ArrowLeft size={18} />
+            Back to My Clubs
           </button>
         </div>
       </div>
     );
   }
 
+  const emptyMessage = "No information added yet.";
+
+  const about = getText(club.about) || getText(club.description);
+  const history = getText(club.history);
+  const pastEvents = getLines(club.pastEvents);
+  const achievements = getLines(club.achievements);
+  const memberCount = getMemberCount(club);
+
   return (
     <div className="club-details-page">
-
       <button
         className="club-details-back"
-        onClick={() => navigate("/my-clubs")}
+        onClick={goBack}
       >
         <ArrowLeft size={18} />
-        Back to Clubs
+        Back to My Clubs
       </button>
 
-
       <div className="club-details-container">
-
-        {/* Header */}
+        {/* Club Header */}
         <div className="club-details-header">
-
           <div className="club-header-icon">
             <Users size={34} />
           </div>
 
           <div className="club-header-content">
-
             <span className="club-details-category">
-              {club.category}
+              {club.category || "Category not specified"}
             </span>
 
-            <h1>{club.name}</h1>
+            <h1>{club.name || "Unnamed Club"}</h1>
 
-            <p>
-              {club.description}
-            </p>
-
+            <p>{about || emptyMessage}</p>
           </div>
 
           <div className="club-member-box">
-
             <Users size={21} />
-
-            <strong>
-              {club.members}
-            </strong>
-
-            <span>
-              Members
-            </span>
-
+            <strong>{memberCount}</strong>
+            <span>Members</span>
           </div>
-
         </div>
-
 
         {/* About */}
         <section className="club-details-section">
-
           <h2>
             <Building2 size={21} />
             About the Club
           </h2>
 
-          <p>
-            {club.about}
+          <p className="club-detail-text">
+            {about || emptyMessage}
           </p>
-
         </section>
-
 
         {/* History */}
         <section className="club-details-section">
-
           <h2>
             <Clock size={21} />
             Club History
           </h2>
 
-          <p>
-            {club.history}
+          <p className="club-detail-text">
+            {history || emptyMessage}
           </p>
-
         </section>
-
 
         {/* Past Events */}
         <section className="club-details-section">
-
           <h2>
             <CalendarDays size={21} />
             Past Events
           </h2>
 
           <div className="club-event-list">
-
-            {club.pastEvents.map((event, index) => (
-              <div
-                className="club-past-event"
-                key={index}
-              >
-                <CheckCircle size={18} />
-                <span>{event}</span>
-              </div>
-            ))}
-
+            {pastEvents.length > 0 ? (
+              pastEvents.map((event, index) => (
+                <div
+                  className="club-past-event"
+                  key={`${index}-${event}`}
+                >
+                  <CheckCircle size={18} />
+                  <span>{event}</span>
+                </div>
+              ))
+            ) : (
+              <p>{emptyMessage}</p>
+            )}
           </div>
-
         </section>
-
 
         {/* Achievements */}
         <section className="club-details-section">
-
           <h2>
             <Trophy size={21} />
-            Achievements & Prizes
+            Achievements &amp; Prizes
           </h2>
 
           <div className="club-achievements">
-
-            {club.achievements.map((achievement, index) => (
-              <div
-                className="club-achievement"
-                key={index}
-              >
-                <Trophy size={17} />
-                <span>{achievement}</span>
-              </div>
-            ))}
-
+            {achievements.length > 0 ? (
+              achievements.map((achievement, index) => (
+                <div
+                  className="club-achievement"
+                  key={`${index}-${achievement}`}
+                >
+                  <Trophy size={17} />
+                  <span>{achievement}</span>
+                </div>
+              ))
+            ) : (
+              <p>{emptyMessage}</p>
+            )}
           </div>
-
         </section>
 
-
-        {/* Join */}
+        {/* Join Club */}
         <section className="club-join-section">
-
           <div>
-            <h2>
-              Interested in joining?
-            </h2>
+            <h2>Interested in joining?</h2>
 
             <p>
-              Become a member of {club.name} and participate
-              in club activities, events and projects.
+              Learn more about {club.name || "this club"} and
+              participate in its activities and events.
             </p>
           </div>
 
           <button
-            onClick={() =>
-              navigate(`/clubs/${clubId}/join`)
-            }
+            onClick={() => navigate(`/clubs/${clubId}/join`)}
           >
             Join Club
           </button>
-
         </section>
-
       </div>
-
     </div>
   );
 }

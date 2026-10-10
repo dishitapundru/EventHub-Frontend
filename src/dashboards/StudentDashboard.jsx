@@ -1,3 +1,5 @@
+
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   CalendarDays,
@@ -10,7 +12,6 @@ import {
   MessageSquare,
   ClipboardCheck,
 } from "lucide-react";
-import { useEffect, useState } from "react";
 import "./StudentDashboard.css";
 
 function StudentDashboard() {
@@ -24,226 +25,272 @@ function StudentDashboard() {
   const [savedEventCount, setSavedEventCount] = useState(0);
   const [myClubCount, setMyClubCount] = useState(0);
 
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [eventsLoading, setEventsLoading] = useState(true);
+  const [eventsError, setEventsError] = useState("");
+
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+  // =========================
+  // Fetch Upcoming Events
+  // =========================
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchUpcomingEvents = async () => {
+      try {
+        if (!apiUrl) {
+          throw new Error("API URL is not configured.");
+        }
+
+        setEventsLoading(true);
+        setEventsError("");
+
+        const response = await fetch(`${apiUrl}/events`);
+
+        if (!response.ok) {
+          throw new Error("Failed to load events.");
+        }
+
+        const data = await response.json();
+        const eventList = Array.isArray(data) ? data : [];
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const filteredEvents = eventList
+          .filter((event) => {
+            if (!event.eventDate) return false;
+
+            const date = new Date(`${event.eventDate}T00:00:00`);
+
+            return (
+              !Number.isNaN(date.getTime()) &&
+              date >= today
+            );
+          })
+          .sort(
+            (a, b) =>
+              new Date(`${a.eventDate}T00:00:00`) -
+              new Date(`${b.eventDate}T00:00:00`)
+          );
+
+        if (isMounted) {
+          setUpcomingEvents(filteredEvents);
+        }
+      } catch (error) {
+        console.error("Upcoming events error:", error);
+
+        if (isMounted) {
+          setUpcomingEvents([]);
+          setEventsError("Unable to load events. Please try again later.");
+        }
+      } finally {
+        if (isMounted) {
+          setEventsLoading(false);
+        }
+      }
+    };
+
+    fetchUpcomingEvents();
+
+    const handleFocus = () => fetchUpcomingEvents();
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
+      isMounted = false;
+      window.removeEventListener("focus", handleFocus);
+    };
+  }, [apiUrl]);
+
   // =========================
   // Notification Count
   // =========================
   useEffect(() => {
+    let isMounted = true;
+
     const fetchNotificationCount = async () => {
       try {
-        const userData = localStorage.getItem("user");
-
-        if (!userData) {
-          setNotificationCount(0);
+        if (!user?.id || !apiUrl) {
+          if (isMounted) setNotificationCount(0);
           return;
         }
 
-        const currentUser = JSON.parse(userData);
-
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/notifications/user/${currentUser.id}`
+          `${apiUrl}/notifications/user/${user.id}`
         );
 
         if (!response.ok) {
-          throw new Error("Failed to fetch notifications");
+          throw new Error("Failed to fetch notifications.");
         }
 
-        const notifications = await response.json();
+        const data = await response.json();
 
-        const unreadCount = notifications.filter(
-          (notification) => notification.readStatus === false
-        ).length;
+        const unreadCount = Array.isArray(data)
+          ? data.filter(
+              (notification) => notification.readStatus === false
+            ).length
+          : 0;
 
-        setNotificationCount(unreadCount);
+        if (isMounted) {
+          setNotificationCount(unreadCount);
+        }
       } catch (error) {
-        console.error(
-          "Notification count error:",
-          error
-        );
-
-        setNotificationCount(0);
+        console.error("Notification count error:", error);
+        if (isMounted) setNotificationCount(0);
       }
     };
 
     fetchNotificationCount();
 
-    const handleFocus = () => {
-      fetchNotificationCount();
-    };
-
+    const handleFocus = () => fetchNotificationCount();
     window.addEventListener("focus", handleFocus);
 
     return () => {
+      isMounted = false;
       window.removeEventListener("focus", handleFocus);
     };
-  }, []);
+  }, [user?.id, apiUrl]);
 
   // =========================
   // Registration Count
   // =========================
   useEffect(() => {
+    let isMounted = true;
+
     const fetchRegistrationCount = async () => {
       try {
-        const userData =
-          localStorage.getItem("user");
-
-        if (!userData) {
-          setRegistrationCount(0);
+        if (!user?.id || !apiUrl) {
+          if (isMounted) setRegistrationCount(0);
           return;
         }
 
-        const currentUser =
-          JSON.parse(userData);
-
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/registrations/user/${currentUser.id}`
+          `${apiUrl}/registrations/user/${user.id}`
         );
 
         if (!response.ok) {
-          throw new Error(
-            "Failed to fetch registrations"
-          );
+          throw new Error("Failed to fetch registrations.");
         }
 
         const data = await response.json();
 
-        setRegistrationCount(data.length);
+        if (isMounted) {
+          setRegistrationCount(Array.isArray(data) ? data.length : 0);
+        }
       } catch (error) {
-        console.error(
-          "Registration count error:",
-          error
-        );
-
-        setRegistrationCount(0);
+        console.error("Registration count error:", error);
+        if (isMounted) setRegistrationCount(0);
       }
     };
 
     fetchRegistrationCount();
-  }, []);
+
+    const handleFocus = () => fetchRegistrationCount();
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
+      isMounted = false;
+      window.removeEventListener("focus", handleFocus);
+    };
+  }, [user?.id, apiUrl]);
 
   // =========================
   // Saved Events Count
   // =========================
   useEffect(() => {
     const updateSavedEventCount = () => {
-      const userData =
-        localStorage.getItem("user");
-
-      if (!userData) {
-        setSavedEventCount(0);
-        return;
-      }
-
       try {
-        const currentUser =
-          JSON.parse(userData);
+        const storedUser = localStorage.getItem("user");
 
-        const savedKey =
-          `savedEvents_${currentUser.id}`;
-
-        const savedData =
-          localStorage.getItem(savedKey);
-
-        if (savedData) {
-          const savedEvents =
-            JSON.parse(savedData);
-
-          setSavedEventCount(
-            Array.isArray(savedEvents)
-              ? savedEvents.length
-              : 0
-          );
-        } else {
+        if (!storedUser) {
           setSavedEventCount(0);
+          return;
         }
-      } catch (error) {
-        console.error(
-          "Saved events count error:",
-          error
-        );
 
+        const currentUser = JSON.parse(storedUser);
+        const savedKey = `savedEvents_${currentUser.id}`;
+        const savedData = localStorage.getItem(savedKey);
+
+        if (!savedData) {
+          setSavedEventCount(0);
+          return;
+        }
+
+        const savedEvents = JSON.parse(savedData);
+
+        setSavedEventCount(
+          Array.isArray(savedEvents) ? savedEvents.length : 0
+        );
+      } catch (error) {
+        console.error("Saved events count error:", error);
         setSavedEventCount(0);
       }
     };
 
     updateSavedEventCount();
 
-    window.addEventListener(
-      "storage",
-      updateSavedEventCount
-    );
+    window.addEventListener("storage", updateSavedEventCount);
+    window.addEventListener("focus", updateSavedEventCount);
 
     return () => {
-      window.removeEventListener(
-        "storage",
-        updateSavedEventCount
-      );
+      window.removeEventListener("storage", updateSavedEventCount);
+      window.removeEventListener("focus", updateSavedEventCount);
     };
   }, []);
 
   // =========================
   // My Clubs Count
+  // Counts ACTIVE clubs owned by this user.
+  // The current backend has no student membership endpoint.
   // =========================
   useEffect(() => {
-    const updateClubCount = () => {
-      const userData =
-        localStorage.getItem("user");
+    let isMounted = true;
 
-      if (!userData) {
-        setMyClubCount(0);
-        return;
-      }
-
+    const fetchMyClubCount = async () => {
       try {
-        const currentUser =
-          JSON.parse(userData);
-
-        const userClubKey =
-          `joinedClubs_${currentUser.id}`;
-
-        let joinedData =
-          localStorage.getItem(userClubKey);
-
-        if (!joinedData) {
-          joinedData =
-            localStorage.getItem("joinedClubs");
+        if (!user?.id || !apiUrl) {
+          if (isMounted) setMyClubCount(0);
+          return;
         }
 
-        if (joinedData) {
-          const clubs =
-            JSON.parse(joinedData);
+        const response = await fetch(`${apiUrl}/clubs`);
 
-          if (Array.isArray(clubs)) {
-            setMyClubCount(clubs.length);
-          } else {
-            setMyClubCount(0);
-          }
-        } else {
-          setMyClubCount(0);
+        if (!response.ok) {
+          throw new Error("Failed to fetch clubs.");
+        }
+
+        const data = await response.json();
+        const allClubs = Array.isArray(data) ? data : [];
+
+        const myClubs = allClubs.filter((club) => {
+          const ownerId = club.ownerId ?? club.owner?.id;
+
+          return (
+            String(ownerId ?? "") === String(user.id) &&
+            String(club.status ?? "").toUpperCase() === "ACTIVE"
+          );
+        });
+
+        if (isMounted) {
+          setMyClubCount(myClubs.length);
         }
       } catch (error) {
-        console.error(
-          "My Clubs count error:",
-          error
-        );
-
-        setMyClubCount(0);
+        console.error("My Clubs count error:", error);
+        if (isMounted) setMyClubCount(0);
       }
     };
 
-    updateClubCount();
+    fetchMyClubCount();
 
-    window.addEventListener(
-      "storage",
-      updateClubCount
-    );
+    const handleFocus = () => fetchMyClubCount();
+    window.addEventListener("focus", handleFocus);
 
     return () => {
-      window.removeEventListener(
-        "storage",
-        updateClubCount
-      );
+      isMounted = false;
+      window.removeEventListener("focus", handleFocus);
     };
-  }, []);
+  }, [user?.id, apiUrl]);
 
   // =========================
   // Logout
@@ -251,583 +298,289 @@ function StudentDashboard() {
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("user");
-
     navigate("/login");
   };
 
+  // =========================
+  // Format Event Date
+  // =========================
+  const getEventDateParts = (dateString) => {
+    const date = new Date(`${dateString}T00:00:00`);
+
+    return {
+      month: date
+        .toLocaleString("en-US", { month: "short" })
+        .toUpperCase(),
+      day: String(date.getDate()).padStart(2, "0"),
+    };
+  };
+
+  // =========================
+  // Render Dashboard
+  // =========================
   return (
     <div className="student-dashboard">
-
-      {/* =========================
-          Sidebar
-      ========================= */}
-
       <aside className="student-sidebar">
-
         <div className="student-brand">
-
           <div className="student-brand-icon">
             <LayoutDashboard size={21} />
           </div>
-
           <span>EventHub</span>
-
         </div>
 
         <nav className="student-nav">
-
-          {/* Dashboard */}
-
           <button
             className="student-nav-item active"
-            onClick={() =>
-              navigate("/dashboard")
-            }
+            onClick={() => navigate("/dashboard")}
           >
             <LayoutDashboard size={19} />
             Dashboard
           </button>
 
-          {/* Browse Events */}
-
           <button
             className="student-nav-item"
-            onClick={() =>
-              navigate("/events")
-            }
+            onClick={() => navigate("/events")}
           >
             <CalendarDays size={19} />
             Browse Events
           </button>
 
-          {/* My Registrations */}
-
           <button
             className="student-nav-item"
-            onClick={() =>
-              navigate("/my-registrations")
-            }
+            onClick={() => navigate("/my-registrations")}
           >
             <Bookmark size={19} />
             My Registrations
           </button>
 
-          {/* My Clubs */}
-
           <button
             className="student-nav-item"
-            onClick={() =>
-              navigate("/my-clubs")
-            }
+            onClick={() => navigate("/my-clubs")}
           >
             <Users size={19} />
             My Clubs
           </button>
 
-          {/* Notifications */}
-
           <button
             className="student-nav-item"
-            onClick={() =>
-              navigate("/notifications")
-            }
+            onClick={() => navigate("/notifications")}
           >
             <Bell size={19} />
             Notifications
           </button>
 
-          {/* Attendance */}
-
           <button
             className="student-nav-item"
-            onClick={() =>
-              navigate("/attendance")
-            }
+            onClick={() => navigate("/attendance")}
           >
             <ClipboardCheck size={19} />
             Attendance
           </button>
 
-          {/* Feedback */}
-
           <button
             className="student-nav-item"
-            onClick={() =>
-              navigate("/feedback")
-            }
+            onClick={() => navigate("/feedback")}
           >
             <MessageSquare size={19} />
             Feedback
           </button>
 
-          {/* My Profile */}
-
           <button
             className="student-nav-item"
-            onClick={() =>
-              navigate("/profile")
-            }
+            onClick={() => navigate("/profile")}
           >
             <UserCircle size={19} />
             My Profile
           </button>
-
         </nav>
 
-        {/* Logout */}
-
-        <button
-          className="student-logout"
-          onClick={handleLogout}
-        >
+        <button className="student-logout" onClick={handleLogout}>
           <LogOut size={19} />
           Logout
         </button>
-
       </aside>
 
-      {/* =========================
-          Main Content
-      ========================= */}
-
       <main className="student-main">
-
-        {/* Header */}
-
         <header className="student-header">
-
           <div>
-
-            <p className="student-small-title">
-              Student Dashboard
-            </p>
-
-            <h1>
-              Welcome back,{" "}
-              {user?.name || "Student"} 👋
-            </h1>
-
+            <p className="student-small-title">Student Dashboard</p>
+            <h1>Welcome back, {user?.name || "Student"} 👋</h1>
             <p>
-              Discover events, manage your
-              registrations and stay connected
-              with your campus community.
+              Discover events, manage your registrations and stay
+              connected with your campus community.
             </p>
-
           </div>
 
-          {/* Profile */}
-
           <div className="student-profile">
-
             <div className="student-avatar">
-              {user?.name
-                ?.charAt(0)
-                .toUpperCase() || "S"}
+              {user?.name?.charAt(0).toUpperCase() || "S"}
             </div>
 
             <div>
-
-              <strong>
-                {user?.name || "Student"}
-              </strong>
-
-              <span>
-                Student
-              </span>
-
+              <strong>{user?.name || "Student"}</strong>
+              <span>Student</span>
             </div>
-
           </div>
-
         </header>
 
-        {/* =========================
-            Stats
-        ========================= */}
-
         <section className="student-stats">
-
-          {/* My Registrations */}
-
           <div
             className="student-stat-card"
-            onClick={() =>
-              navigate("/my-registrations")
-            }
+            onClick={() => navigate("/my-registrations")}
             style={{ cursor: "pointer" }}
           >
-
             <div className="student-stat-icon">
               <CalendarDays size={22} />
             </div>
-
             <div>
-
-              <span>
-                My Registrations
-              </span>
-
-              <strong>
-                {registrationCount}
-              </strong>
-
+              <span>My Registrations</span>
+              <strong>{registrationCount}</strong>
             </div>
-
           </div>
-
-          {/* My Clubs */}
 
           <div
             className="student-stat-card"
-            onClick={() =>
-              navigate("/my-clubs")
-            }
+            onClick={() => navigate("/my-clubs")}
             style={{ cursor: "pointer" }}
           >
-
             <div className="student-stat-icon">
               <Users size={22} />
             </div>
-
             <div>
-
-              <span>
-                My Clubs
-              </span>
-
-              <strong>
-                {myClubCount}
-              </strong>
-
+              <span>My Clubs</span>
+              <strong>{myClubCount}</strong>
             </div>
-
           </div>
-
-          {/* Saved Events */}
 
           <div
             className="student-stat-card"
-            onClick={() =>
-              navigate("/saved-events")
-            }
+            onClick={() => navigate("/saved-events")}
             style={{ cursor: "pointer" }}
           >
-
             <div className="student-stat-icon">
               <Bookmark size={22} />
             </div>
-
             <div>
-
-              <span>
-                Saved Events
-              </span>
-
-              <strong>
-                {savedEventCount}
-              </strong>
-
+              <span>Saved Events</span>
+              <strong>{savedEventCount}</strong>
             </div>
-
           </div>
-
-          {/* Notifications */}
 
           <div
             className="student-stat-card"
-            onClick={() =>
-              navigate("/notifications")
-            }
+            onClick={() => navigate("/notifications")}
             style={{ cursor: "pointer" }}
           >
-
             <div className="student-stat-icon">
               <Bell size={22} />
             </div>
-
             <div>
-
-              <span>
-                Notifications
-              </span>
-
-              <strong>
-                {notificationCount}
-              </strong>
-
+              <span>Notifications</span>
+              <strong>{notificationCount}</strong>
             </div>
-
           </div>
-
         </section>
 
-        {/* =========================
-            Upcoming Events
-        ========================= */}
-
         <section className="student-section">
-
           <div className="student-section-heading">
-
             <div>
-
-              <h2>
-                Upcoming Events
-              </h2>
-
-              <p>
-                Events happening on your campus
-              </p>
-
+              <h2>Upcoming Events</h2>
+              <p>Events happening on your campus</p>
             </div>
 
-            <button
-              onClick={() =>
-                navigate("/events")
-              }
-            >
+            <button onClick={() => navigate("/events")}>
               View All
             </button>
-
           </div>
 
           <div className="student-event-grid">
+            {eventsLoading ? (
+              <p>Loading upcoming events...</p>
+            ) : eventsError ? (
+              <p>{eventsError}</p>
+            ) : upcomingEvents.length > 0 ? (
+              upcomingEvents.map((event) => {
+                const { month, day } = getEventDateParts(
+                  event.eventDate
+                );
 
-            {/* Event 1 */}
+                return (
+                  <div
+                    className="student-event-card"
+                    key={event.id}
+                  >
+                    <div className="student-event-date">
+                      <span>{month}</span>
+                      <strong>{day}</strong>
+                    </div>
 
-            <div className="student-event-card">
+                    <div className="student-event-info">
+                      <h3>{event.title}</h3>
+                      <p>
+                        {event.location || "Location not specified"}
+                      </p>
+                      <span>
+                        {event.capacity ?? "N/A"} seats in total
+                      </span>
+                    </div>
 
-              <div className="student-event-date">
-                <span>OCT</span>
-                <strong>18</strong>
-              </div>
-
-              <div className="student-event-info">
-
-                <h3>
-                  Tech Innovators Summit
-                </h3>
-
-                <p>
-                  Main Auditorium
-                </p>
-
-                <span>
-                  120 seats available
-                </span>
-
-              </div>
-
-              <button
-                onClick={() =>
-                  navigate("/events/1")
-                }
-              >
-                View Event
-              </button>
-
-            </div>
-
-            {/* Event 2 */}
-
-            <div className="student-event-card">
-
-              <div className="student-event-date">
-                <span>OCT</span>
-                <strong>25</strong>
-              </div>
-
-              <div className="student-event-info">
-
-                <h3>
-                  CodeSprint Hackathon
-                </h3>
-
-                <p>
-                  Innovation Lab
-                </p>
-
-                <span>
-                  80 seats available
-                </span>
-
-              </div>
-
-              <button
-                onClick={() =>
-                  navigate("/events/2")
-                }
-              >
-                View Event
-              </button>
-
-            </div>
-
-            {/* Event 3 */}
-
-            <div className="student-event-card">
-
-              <div className="student-event-date">
-                <span>NOV</span>
-                <strong>02</strong>
-              </div>
-
-              <div className="student-event-info">
-
-                <h3>
-                  AI & Machine Learning Workshop
-                </h3>
-
-                <p>
-                  Seminar Hall
-                </p>
-
-                <span>
-                  45 seats available
-                </span>
-
-              </div>
-
-              <button
-                onClick={() =>
-                  navigate("/events/3")
-                }
-              >
-                View Event
-              </button>
-
-            </div>
-
+                    <button
+                      onClick={() => navigate(`/events/${event.id}`)}
+                    >
+                      View Event
+                    </button>
+                  </div>
+                );
+              })
+            ) : (
+              <p>No upcoming events available.</p>
+            )}
           </div>
-
         </section>
 
-        {/* =========================
-            Quick Actions
-        ========================= */}
-
         <section className="student-section">
-
           <div className="student-section-heading">
-
             <div>
-
-              <h2>
-                Quick Actions
-              </h2>
-
-              <p>
-                Manage your EventHub activities
-              </p>
-
+              <h2>Quick Actions</h2>
+              <p>Manage your EventHub activities</p>
             </div>
-
           </div>
 
           <div className="student-actions">
-
-            {/* Browse Events */}
-
-            <button
-              onClick={() =>
-                navigate("/events")
-              }
-            >
-
+            <button onClick={() => navigate("/events")}>
               <CalendarDays size={22} />
-
               <div>
-
-                <strong>
-                  Browse Events
-                </strong>
-
-                <span>
-                  Find upcoming campus events
-                </span>
-
+                <strong>Browse Events</strong>
+                <span>Find upcoming campus events</span>
               </div>
-
             </button>
 
-            {/* My Registrations */}
-
-            <button
-              onClick={() =>
-                navigate("/my-registrations")
-              }
-            >
-
+            <button onClick={() => navigate("/my-registrations")}>
               <Bookmark size={22} />
-
               <div>
-
-                <strong>
-                  My Registrations
-                </strong>
-
-                <span>
-                  View events you registered for
-                </span>
-
+                <strong>My Registrations</strong>
+                <span>View events you registered for</span>
               </div>
-
             </button>
 
-            {/* My Clubs */}
-
-            <button
-              onClick={() =>
-                navigate("/my-clubs")
-              }
-            >
-
+            <button onClick={() => navigate("/my-clubs")}>
               <Users size={22} />
-
               <div>
-
-                <strong>
-                  My Clubs
-                </strong>
-
-                <span>
-                  View clubs you joined
-                </span>
-
+                <strong>My Clubs</strong>
+                <span>View clubs you joined</span>
               </div>
-
             </button>
 
-            {/* Event Feedback */}
-
-            <button
-              onClick={() =>
-                navigate("/feedback")
-              }
-            >
-
+            <button onClick={() => navigate("/feedback")}>
               <MessageSquare size={22} />
-
               <div>
-
-                <strong>
-                  Event Feedback
-                </strong>
-
-                <span>
-                  Rate events you attended
-                </span>
-
+                <strong>Event Feedback</strong>
+                <span>Rate events you attended</span>
               </div>
-
             </button>
-
           </div>
-
         </section>
-
       </main>
-
     </div>
   );
 }

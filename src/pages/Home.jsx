@@ -1,3 +1,5 @@
+
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -13,6 +15,60 @@ import {
 import "./Home.css";
 
 function Home() {
+  const [latestEvent, setLatestEvent] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchLatestEvent = async () => {
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL;
+        const response = await fetch(`${apiUrl}/events`);
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch events");
+        }
+
+        const data = await response.json();
+
+        // Find the most recently created event.
+        // Prefer createdAt when your backend provides it.
+        const sortedEvents = [...data].sort((a, b) => {
+          const dateA = new Date(
+            a.createdAt || a.created_at || a.id || 0
+          ).getTime();
+
+          const dateB = new Date(
+            b.createdAt || b.created_at || b.id || 0
+          ).getTime();
+
+          return dateB - dateA;
+        });
+
+        setLatestEvent(sortedEvents[0] || null);
+      } catch (error) {
+        console.error("Error fetching latest event:", error);
+        setLatestEvent(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLatestEvent();
+  }, []);
+
+  const eventDate = latestEvent?.eventDate
+    ? new Date(`${latestEvent.eventDate}T00:00:00`)
+    : null;
+
+  const formattedDate =
+    eventDate && !Number.isNaN(eventDate.getTime())
+      ? eventDate.toLocaleDateString("en-IN", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        })
+      : "Date to be announced";
+
   return (
     <div className="home-page">
       <nav className="navbar">
@@ -24,19 +80,21 @@ function Home() {
             <span>EventHub</span>
           </div>
 
-         <div className="nav-links">
-  <Link to="/events">Events</Link>
-  <Link to="/clubs">Clubs</Link>
-  <a href="#about">About</a>
-</div>
+          <div className="nav-links">
+            <Link to="/events">Events</Link>
+            <Link to="/clubs">Clubs</Link>
+            <a href="#about">About</a>
+          </div>
+
           <div className="nav-actions">
-           <Link to="/login" className="login-btn">
-  Login
-</Link>
+            <Link to="/login" className="login-btn">
+              Login
+            </Link>
+
             <Link to="/register" className="signup-btn">
-  Get Started
-  <ArrowRight size={16} />
-</Link>
+              Get Started
+              <ArrowRight size={16} />
+            </Link>
           </div>
         </div>
       </nav>
@@ -70,28 +128,33 @@ function Home() {
 
             <div className="hero-actions">
               <Link to="/events" className="primary-btn">
-  Explore Events
-  <ArrowRight size={18} />
-</Link>
+                Explore Events
+                <ArrowRight size={18} />
+              </Link>
+
               <Link to="/clubs" className="secondary-btn">
-  Browse Clubs
-</Link>
+                Browse Clubs
+              </Link>
             </div>
 
             <div className="hero-stats">
               <div className="stat">
-                <strong>100+</strong>
+                <strong>EventHub</strong>
                 <span>Campus Events</span>
               </div>
+
               <div className="stat-divider"></div>
+
               <div className="stat">
-                <strong>30+</strong>
-                <span>Active Clubs</span>
+                <strong>Clubs</strong>
+                <span>Connect & Explore</span>
               </div>
+
               <div className="stat-divider"></div>
+
               <div className="stat">
-                <strong>5K+</strong>
-                <span>Students</span>
+                <strong>Students</strong>
+                <span>Campus Community</span>
               </div>
             </div>
           </motion.div>
@@ -105,37 +168,74 @@ function Home() {
             <div className="preview-window">
               <div className="preview-header">
                 <div>
-                  <span className="small-label">Upcoming event</span>
-                  <h3>Tech Innovators Summit</h3>
+                  <span className="small-label">
+                    {loading ? "Loading event..." : "Recently created event"}
+                  </span>
+
+                  <h3>
+                    {loading
+                      ? "Loading..."
+                      : latestEvent?.title || "No events available"}
+                  </h3>
                 </div>
-                <div className="event-status">
-                  <span></span>
-                  Open
-                </div>
+
+                {latestEvent && (
+                  <div className="event-status">
+                    <span></span>
+                    Available
+                  </div>
+                )}
               </div>
 
               <div className="event-image">
                 <div className="event-image-overlay">
                   <CalendarDays size={20} />
-                  <span>October 18, 2026</span>
+                  <span>
+                    {loading
+                      ? "Please wait..."
+                      : latestEvent
+                      ? formattedDate
+                      : "Check back for new events"}
+                  </span>
                 </div>
               </div>
 
               <div className="event-details">
                 <div className="detail-row">
                   <Users size={18} />
-                  <span>248 students registered</span>
+                  <span>
+                    {latestEvent
+                      ? latestEvent.location || "Location to be announced"
+                      : "Explore campus events"}
+                  </span>
                 </div>
+
                 <div className="detail-row">
                   <Ticket size={18} />
-                  <span>120 seats remaining</span>
+                  <span>
+                    {latestEvent
+                      ? `${latestEvent.capacity ?? "N/A"} total seats`
+                      : "Discover upcoming events"}
+                  </span>
                 </div>
               </div>
 
-              <Link to="/login" className="preview-register">
-  Register Now
-  <ArrowRight size={16} />
-</Link>
+              {latestEvent && (
+                <Link
+                  to={`/events/${latestEvent.id}`}
+                  className="preview-register"
+                >
+                  View Event
+                  <ArrowRight size={16} />
+                </Link>
+              )}
+
+              {!loading && !latestEvent && (
+                <Link to="/events" className="preview-register">
+                  Explore Events
+                  <ArrowRight size={16} />
+                </Link>
+              )}
             </div>
           </motion.div>
         </section>
@@ -143,11 +243,13 @@ function Home() {
         <section className="features-section" id="about">
           <div className="section-heading">
             <span className="section-label">EVERYTHING IN ONE PLACE</span>
+
             <h2>
               Your campus.
               <br />
               <span>One connected experience.</span>
             </h2>
+
             <p>
               EventHub brings students, clubs and administrators
               together through one simple platform.
@@ -160,16 +262,19 @@ function Home() {
               title="Discover Events"
               text="Find workshops, competitions, fests and activities based on your interests."
             />
+
             <FeatureCard
               icon={<QrCode size={23} />}
-              title="Digital QR Pass"
-              text="Get your event entry pass instantly after registration."
+              title="Event Entry Pass"
+              text="Keep track of your event registrations and entry details."
             />
+
             <FeatureCard
               icon={<ShieldCheck size={23} />}
               title="Verified Clubs"
               text="Discover activities from verified college clubs and organizations."
             />
+
             <FeatureCard
               icon={<CalendarDays size={23} />}
               title="Easy Registration"
@@ -183,10 +288,11 @@ function Home() {
             <Sparkles size={28} />
             <h2>Make every campus moment count.</h2>
             <p>Discover events. Meet people. Build experiences.</p>
+
             <Link to="/register" className="primary-btn">
-  Join EventHub
-  <ArrowRight size={18} />
-</Link>
+              Join EventHub
+              <ArrowRight size={18} />
+            </Link>
           </div>
         </section>
       </main>
@@ -198,6 +304,7 @@ function Home() {
           </div>
           <span>EventHub</span>
         </div>
+
         <p>College Events & Club Management Platform</p>
         <span className="copyright">© 2026 EventHub</span>
       </footer>
