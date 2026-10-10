@@ -1,0 +1,616 @@
+
+/* =========================================
+   CLUB EVENTS PAGE
+========================================= */
+
+.club-events-page {
+  min-height: 100vh;
+  display: flex;
+  background: #f7f8fc;
+  color: #171725;
+}
+
+/* =========================================
+   SIDEBAR POSITION
+========================================= */
+
+.club-events-page .club-sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+
+  width: 250px;
+  height: 100vh;
+
+  z-index: 1000;
+}
+
+/* =========================================
+   MAIN
+========================================= */
+
+.club-events-main {
+  margin-left: 250px;
+
+  width: calc(100% - 250px);
+  min-height: 100vh;
+
+  box-sizing: border-box;
+
+  padding: 35px 40px 50px;
+}
+
+/* =========================================
+   HEADER
+========================================= */
+
+.club-events-header {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 0 auto 30px;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 25px;
+}
+
+.club-events-label {
+  margin: 0 0 8px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  letter-spacing: 1.2px;
+
+  color: #7655e8;
+}
+
+.club-events-header h1 {
+  margin: 0;
+
+  font-size: 32px;
+  line-height: 1.2;
+
+  font-weight: 750;
+
+  color: #171725;
+}
+
+.club-events-subtitle {
+  margin: 9px 0 0;
+
+  font-size: 14px;
+
+  color: #7d7f8f;
+}
+
+.club-events-subtitle strong {
+  color: #4e456f;
+}
+
+/* =========================================
+   HEADER ACTIONS
+========================================= */
+
+.club-events-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.club-events-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 8px 13px;
+
+  background: #ffffff;
+
+  border: 1px solid #e7e8f0;
+  border-radius: 13px;
+
+  box-shadow: 0 7px 22px rgba(35, 30, 70, 0.045);
+}
+
+.club-events-user-avatar {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  color: #ffffff;
+
+  background: linear-gradient(
+    135deg,
+    #7655e8,
+    #9a6cf2
+  );
+}
+
+.club-events-user strong {
+  display: block;
+
+  font-size: 12px;
+
+  color: #28283a;
+}
+
+.club-events-user span {
+  display: block;
+
+  margin-top: 2px;
+
+  font-size: 10px;
+
+  color: #8b8d9b;
+}
+
+/* =========================================
+   CREATE BUTTON
+========================================= */
+
+.create-event-button {
+  height: 43px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 0 17px;
+
+  border: none;
+  border-radius: 11px;
+
+  background: linear-gradient(
+    135deg,
+    #7655e8,
+    #916bea
+  );
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 13px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 20px rgba(118, 85, 232, 0.20);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.create-event-button:hover {
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 11px 25px rgba(118, 85, 232, 0.28);
+}
+
+/* =========================================
+   ERROR
+========================================= */
+
+.club-events-error {
+  max-width: 1400px;
+
+  margin: 0 auto 22px;
+
+  padding: 13px 16px;
+
+  border-radius: 11px;
+
+  background: #fff1f1;
+
+  border: 1px solid #ffd4d4;
+
+  color: #c74444;
+
+  font-size: 13px;
+}
+
+/* =========================================
+   EVENTS GRID
+========================================= */
+
+.club-events-grid {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 22px;
+}
+
+/* =========================================
+   EVENT CARD
+========================================= */
+
+.club-event-card {
+  padding: 23px;
+
+  background: #ffffff;
+
+  border: 1px solid #e6e7ef;
+
+  border-radius: 17px;
+
+  box-shadow:
+    0 9px 28px rgba(35, 30, 70, 0.045);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.club-event-card:hover {
+  transform: translateY(-3px);
+
+  border-color: #d9d1fb;
+
+  box-shadow:
+    0 14px 34px rgba(35, 30, 70, 0.08);
+}
+
+/* =========================================
+   CARD TOP
+========================================= */
+
+.club-event-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 18px;
+}
+
+.event-calendar-icon {
+  width: 46px;
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  color: #7655e8;
+
+  background: #f0ebff;
+}
+
+.event-status {
+  padding: 5px 9px;
+
+  border-radius: 20px;
+
+  background: #effcf5;
+
+  color: #258456;
+
+  border: 1px solid #d0f0df;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* =========================================
+   CARD TITLE
+========================================= */
+
+.club-event-card h2 {
+  margin: 0 0 18px;
+
+  font-size: 18px;
+  line-height: 1.35;
+
+  font-weight: 700;
+
+  color: #252537;
+}
+
+/* =========================================
+   EVENT INFO
+========================================= */
+
+.event-info {
+  display: flex;
+  flex-direction: column;
+
+  gap: 11px;
+
+  padding-bottom: 20px;
+
+  border-bottom: 1px solid #eeeeF4;
+}
+
+.event-info > div {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  min-width: 0;
+
+  color: #858795;
+}
+
+.event-info svg {
+  flex-shrink: 0;
+
+  color: #7655e8;
+}
+
+.event-info span {
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  font-size: 12px;
+}
+
+/* =========================================
+   CARD ACTIONS
+========================================= */
+
+.event-card-actions {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 10px;
+
+  margin-top: 17px;
+}
+
+.event-card-actions button {
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  border-radius: 10px;
+
+  font-family: inherit;
+
+  font-size: 12px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.edit-event-button {
+  background: #f2efff;
+
+  border: 1px solid #ded5ff;
+
+  color: #7051d9;
+}
+
+.edit-event-button:hover {
+  background: #eae4ff;
+
+  transform: translateY(-1px);
+}
+
+.delete-event-button {
+  background: #fff3f3;
+
+  border: 1px solid #ffdada;
+
+  color: #cf4c4c;
+}
+
+.delete-event-button:hover {
+  background: #ffe8e8;
+
+  transform: translateY(-1px);
+}
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
+.empty-events-card {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 0 auto;
+
+  box-sizing: border-box;
+
+  padding: 65px 30px;
+
+  text-align: center;
+
+  background: #ffffff;
+
+  border: 1px solid #e7e8f0;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 10px 30px rgba(35, 30, 70, 0.05);
+}
+
+.empty-events-icon {
+  width: 68px;
+  height: 68px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0 auto 18px;
+
+  border-radius: 18px;
+
+  color: #7655e8;
+
+  background: #f0ebff;
+}
+
+.empty-events-card h2 {
+  margin: 0;
+
+  font-size: 21px;
+
+  color: #252537;
+}
+
+.empty-events-card p {
+  margin: 8px 0 21px;
+
+  font-size: 13px;
+
+  color: #858795;
+}
+
+.empty-events-card button {
+  min-height: 42px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 0 17px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: linear-gradient(
+    135deg,
+    #7655e8,
+    #916bea
+  );
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 12px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 7px 18px rgba(118, 85, 232, 0.20);
+}
+
+/* =========================================
+   LOADING
+========================================= */
+
+.club-events-loading {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 14px;
+
+  color: #77798a;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1150px) {
+  .club-events-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 850px) {
+  .club-events-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .club-events-header-actions {
+    width: 100%;
+
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 750px) {
+
+  .club-events-page {
+    display: block;
+  }
+
+  .club-events-page .club-sidebar {
+    position: relative;
+
+    width: 100%;
+    height: auto;
+  }
+
+  .club-events-main {
+    margin-left: 0;
+
+    width: 100%;
+
+    padding: 25px 20px 40px;
+  }
+
+  .club-events-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .club-events-header h1 {
+    font-size: 27px;
+  }
+
+  .club-events-header-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .club-events-user {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .create-event-button {
+    width: 100%;
+  }
+}

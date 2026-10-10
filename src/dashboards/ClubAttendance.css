@@ -1,0 +1,1165 @@
+
+/* =========================================================
+   EVENTHUB - CLUB ATTENDANCE
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+.club-attendance-page {
+  min-height: 100vh;
+  display: flex;
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(124, 58, 237, 0.10),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 85% 85%,
+      rgba(6, 182, 212, 0.08),
+      transparent 28%
+    ),
+    #f7f8fc;
+  color: #17172b;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.club-attendance-sidebar {
+  width: 245px;
+  min-height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 24px 15px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.94),
+      rgba(248, 247, 255, 0.96)
+    );
+
+  border-right: 1px solid rgba(124, 58, 237, 0.10);
+
+  box-shadow:
+    8px 0 35px rgba(50, 40, 100, 0.05);
+
+  z-index: 10;
+}
+
+/* Logo */
+
+.club-attendance-logo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 3px 9px 25px;
+}
+
+.club-attendance-logo-icon {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 13px;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #7c3aed,
+      #06b6d4
+    );
+
+  box-shadow:
+    0 8px 22px rgba(124, 58, 237, 0.25);
+}
+
+.club-attendance-logo h2 {
+  margin: 0;
+
+  font-size: 20px;
+  font-weight: 750;
+  letter-spacing: -0.4px;
+}
+
+.club-attendance-logo span {
+  display: block;
+
+  margin-top: 2px;
+
+  font-size: 11px;
+  color: #77758b;
+}
+
+/* Navigation */
+
+.club-attendance-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.club-attendance-nav button {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  padding: 11px 13px;
+
+  border: none;
+  border-radius: 11px;
+
+  background: transparent;
+
+  color: #69677b;
+
+  font-size: 14px;
+  font-weight: 550;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.club-attendance-nav button:hover {
+  color: #5b21b6;
+
+  background:
+    rgba(124, 58, 237, 0.07);
+
+  transform: translateX(2px);
+}
+
+.club-attendance-nav button.active {
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #7c3aed,
+      #6366f1
+    );
+
+  box-shadow:
+    0 7px 20px rgba(124, 58, 237, 0.22);
+}
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.club-attendance-main {
+  width: calc(100% - 245px);
+
+  margin-left: 245px;
+
+  padding: 34px 38px 50px;
+
+  min-height: 100vh;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.club-attendance-header {
+  margin-bottom: 27px;
+}
+
+.club-attendance-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  margin-bottom: 17px;
+
+  padding: 8px 12px;
+
+  border: 1px solid rgba(124, 58, 237, 0.12);
+  border-radius: 9px;
+
+  background: rgba(255, 255, 255, 0.72);
+
+  color: #6d28d9;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.club-attendance-back:hover {
+  background: #ffffff;
+
+  transform: translateX(-2px);
+
+  box-shadow:
+    0 5px 15px rgba(124, 58, 237, 0.10);
+}
+
+.club-attendance-header h1 {
+  margin: 0;
+
+  font-size: 32px;
+  font-weight: 780;
+
+  letter-spacing: -1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #17172b,
+      #6d28d9
+    );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.club-attendance-header p {
+  margin: 7px 0 0;
+
+  color: #77758a;
+
+  font-size: 14px;
+}
+
+/* =========================================================
+   MESSAGES
+   ========================================================= */
+
+.club-attendance-message {
+  min-height: 220px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px;
+
+  border: 1px solid rgba(124, 58, 237, 0.10);
+  border-radius: 18px;
+
+  background:
+    rgba(255, 255, 255, 0.78);
+
+  color: #77758a;
+
+  font-size: 14px;
+
+  box-shadow:
+    0 12px 35px rgba(50, 40, 100, 0.05);
+}
+
+.club-attendance-message.error {
+  color: #dc2626;
+
+  background:
+    rgba(254, 242, 242, 0.88);
+
+  border-color:
+    rgba(220, 38, 38, 0.12);
+}
+
+/* =========================================================
+   STAT CARDS
+   ========================================================= */
+
+.attendance-stats {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 18px;
+
+  margin-bottom: 23px;
+}
+
+.attendance-stat-card {
+  min-height: 105px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 20px;
+
+  border:
+    1px solid rgba(124, 58, 237, 0.09);
+
+  border-radius: 17px;
+
+  background:
+    rgba(255, 255, 255, 0.78);
+
+  backdrop-filter: blur(12px);
+
+  box-shadow:
+    0 10px 30px rgba(50, 40, 100, 0.05);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.attendance-stat-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 15px 35px rgba(50, 40, 100, 0.09);
+}
+
+.attendance-stat-card > svg {
+  width: 45px;
+  height: 45px;
+
+  padding: 11px;
+
+  border-radius: 13px;
+
+  color: #6d28d9;
+
+  background:
+    rgba(124, 58, 237, 0.10);
+}
+
+.attendance-stat-card.present > svg {
+  color: #059669;
+
+  background:
+    rgba(16, 185, 129, 0.11);
+}
+
+.attendance-stat-card.remaining > svg {
+  color: #0891b2;
+
+  background:
+    rgba(6, 182, 212, 0.11);
+}
+
+.attendance-stat-card span {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #77758a;
+
+  font-size: 12px;
+  font-weight: 550;
+}
+
+.attendance-stat-card strong {
+  display: block;
+
+  color: #19182b;
+
+  font-size: 26px;
+  font-weight: 760;
+}
+
+/* =========================================================
+   TABLE CARD
+   ========================================================= */
+
+.attendance-table-card {
+  overflow: hidden;
+
+  border:
+    1px solid rgba(124, 58, 237, 0.09);
+
+  border-radius: 19px;
+
+  background:
+    rgba(255, 255, 255, 0.84);
+
+  backdrop-filter: blur(15px);
+
+  box-shadow:
+    0 12px 38px rgba(50, 40, 100, 0.06);
+}
+
+/* =========================================================
+   TABLE HEADER
+   ========================================================= */
+
+.attendance-table-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 22px 23px;
+
+  border-bottom:
+    1px solid rgba(124, 58, 237, 0.08);
+}
+
+.attendance-table-header h2 {
+  margin: 0;
+
+  font-size: 19px;
+  font-weight: 720;
+
+  letter-spacing: -0.3px;
+}
+
+.attendance-table-header p {
+  margin: 5px 0 0;
+
+  color: #858397;
+
+  font-size: 12px;
+}
+
+/* =========================================================
+   TOOLS
+   ========================================================= */
+
+.attendance-tools {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+/* Event filter */
+
+.attendance-filter {
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  padding: 0 10px;
+
+  border:
+    1px solid rgba(124, 58, 237, 0.12);
+
+  border-radius: 10px;
+
+  background:
+    rgba(249, 248, 255, 0.9);
+
+  color: #6d28d9;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.attendance-filter:focus-within {
+  border-color:
+    rgba(124, 58, 237, 0.35);
+
+  box-shadow:
+    0 0 0 3px rgba(124, 58, 237, 0.08);
+}
+
+.attendance-filter select {
+  min-width: 145px;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #49475c;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+/* Search */
+
+.attendance-search {
+  width: 255px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 0 11px;
+
+  border:
+    1px solid rgba(124, 58, 237, 0.12);
+
+  border-radius: 10px;
+
+  background:
+    rgba(249, 248, 255, 0.9);
+
+  color: #88859a;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.attendance-search:focus-within {
+  border-color:
+    rgba(124, 58, 237, 0.35);
+
+  box-shadow:
+    0 0 0 3px rgba(124, 58, 237, 0.08);
+}
+
+.attendance-search input {
+  width: 100%;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #27263a;
+
+  font-size: 12px;
+}
+
+.attendance-search input::placeholder {
+  color: #aaa7b8;
+}
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.attendance-table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+.attendance-table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  min-width: 950px;
+}
+
+.attendance-table th {
+  padding: 13px 17px;
+
+  background:
+    rgba(248, 247, 253, 0.82);
+
+  color: #858397;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  text-align: left;
+
+  border-bottom:
+    1px solid rgba(124, 58, 237, 0.08);
+}
+
+.attendance-table td {
+  padding: 14px 17px;
+
+  border-bottom:
+    1px solid rgba(124, 58, 237, 0.055);
+
+  color: #57556a;
+
+  font-size: 12px;
+
+  white-space: nowrap;
+}
+
+.attendance-table tbody tr {
+  transition:
+    background 0.2s ease;
+}
+
+.attendance-table tbody tr:hover {
+  background:
+    rgba(124, 58, 237, 0.035);
+}
+
+.attendance-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* =========================================================
+   STUDENT
+   ========================================================= */
+
+.attendance-student {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+}
+
+.student-avatar {
+  width: 34px;
+  height: 34px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  color: #6d28d9;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(124, 58, 237, 0.12),
+      rgba(6, 182, 212, 0.10)
+    );
+}
+
+.attendance-student strong {
+  display: block;
+
+  color: #302e42;
+
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.attendance-student span {
+  display: block;
+
+  margin-top: 2px;
+
+  color: #9996a8;
+
+  font-size: 10px;
+}
+
+/* =========================================================
+   EVENT
+   ========================================================= */
+
+.attendance-event {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  max-width: 210px;
+
+  overflow: hidden;
+
+  color: #5f5d70;
+
+  text-overflow: ellipsis;
+}
+
+.attendance-event svg {
+  flex-shrink: 0;
+
+  color: #7c3aed;
+}
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.attendance-status {
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 5px 9px;
+
+  border-radius: 20px;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.attendance-status.present {
+  color: #047857;
+
+  background:
+    rgba(16, 185, 129, 0.10);
+}
+
+.attendance-status.pending {
+  color: #b45309;
+
+  background:
+    rgba(245, 158, 11, 0.11);
+}
+
+/* =========================================================
+   ACTION BUTTON
+   ========================================================= */
+
+.attendance-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  min-width: 110px;
+
+  padding: 7px 11px;
+
+  border: none;
+  border-radius: 8px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #7c3aed,
+      #6366f1
+    );
+
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 5px 13px rgba(124, 58, 237, 0.18);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.attendance-action:hover:not(:disabled) {
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 8px 17px rgba(124, 58, 237, 0.25);
+}
+
+.attendance-action.marked {
+  background:
+    rgba(16, 185, 129, 0.10);
+
+  color: #047857;
+
+  box-shadow: none;
+
+  cursor: default;
+}
+
+.attendance-action:disabled {
+  opacity: 0.9;
+}
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.attendance-empty {
+  min-height: 300px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 35px;
+
+  text-align: center;
+}
+
+.attendance-empty > svg {
+  margin-bottom: 12px;
+
+  padding: 10px;
+
+  border-radius: 14px;
+
+  color: #7c3aed;
+
+  background:
+    rgba(124, 58, 237, 0.08);
+}
+
+.attendance-empty h3 {
+  margin: 0;
+
+  color: #333146;
+
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.attendance-empty p {
+  max-width: 420px;
+
+  margin: 7px 0 0;
+
+  color: #9290a2;
+
+  font-size: 12px;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+  .attendance-stats {
+    grid-template-columns:
+      repeat(3, 1fr);
+  }
+
+  .attendance-table-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .attendance-tools {
+    width: 100%;
+  }
+
+  .attendance-search {
+    flex: 1;
+    width: auto;
+  }
+
+}
+
+@media (max-width: 850px) {
+
+  .club-attendance-sidebar {
+    width: 205px;
+  }
+
+  .club-attendance-main {
+    width: calc(100% - 205px);
+    margin-left: 205px;
+
+    padding: 28px 22px;
+  }
+
+  .attendance-stats {
+    grid-template-columns:
+      1fr;
+  }
+
+}
+
+@media (max-width: 650px) {
+
+  .club-attendance-sidebar {
+    display: none;
+  }
+
+  .club-attendance-main {
+    width: 100%;
+    margin-left: 0;
+
+    padding: 22px 15px;
+  }
+
+  .club-attendance-header h1 {
+    font-size: 27px;
+  }
+
+  .attendance-tools {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .attendance-filter {
+    width: 100%;
+  }
+
+  .attendance-filter select {
+    width: 100%;
+  }
+
+  .attendance-search {
+    width: 100%;
+  }
+
+}
+
+/* =========================================
+   CLUB DASHBOARD LAYOUT
+========================================= */
+
+.club-attendance-page {
+  min-height: 100vh;
+  display: flex;
+
+  background: #f7f8fc;
+  color: #171725;
+}
+
+.club-attendance-page .club-sidebar {
+  position: fixed;
+
+  left: 0;
+  top: 0;
+
+  width: 250px;
+  height: 100vh;
+
+  z-index: 1000;
+}
+
+.club-attendance-main {
+  margin-left: 250px;
+
+  width: calc(100% - 250px);
+  min-height: 100vh;
+
+  box-sizing: border-box;
+
+  padding: 35px 40px 50px;
+}
+
+/* =========================================
+   HEADER
+========================================= */
+
+.club-attendance-header {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 0 auto 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 25px;
+}
+
+.club-attendance-label {
+  margin: 0 0 8px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  letter-spacing: 1.2px;
+
+  color: #7655e8;
+}
+
+.club-attendance-header h1 {
+  margin: 0;
+
+  font-size: 32px;
+  font-weight: 750;
+
+  color: #171725;
+}
+
+.club-attendance-header p {
+  margin: 8px 0 0;
+
+  font-size: 14px;
+
+  color: #7d7f8f;
+}
+
+/* =========================================
+   HEADER USER
+========================================= */
+
+.club-attendance-header-user {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 9px 13px;
+
+  background: #ffffff;
+
+  border: 1px solid #e7e8f0;
+
+  border-radius: 13px;
+
+  box-shadow:
+    0 7px 22px rgba(35, 30, 70, 0.045);
+}
+
+.club-attendance-user-avatar {
+  width: 39px;
+  height: 39px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #7655e8,
+      #9a6cf2
+    );
+}
+
+.club-attendance-header-user strong {
+  display: block;
+
+  font-size: 12px;
+
+  color: #28283a;
+}
+
+.club-attendance-header-user span {
+  display: block;
+
+  margin-top: 2px;
+
+  font-size: 10px;
+
+  color: #8b8d9b;
+}
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+.club-attendance-message {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 0 auto;
+
+  padding: 25px;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  border: 1px solid #e6e7ef;
+
+  border-radius: 15px;
+
+  text-align: center;
+
+  font-size: 14px;
+
+  color: #77798a;
+}
+
+.club-attendance-message.error {
+  color: #c74444;
+
+  background: #fff4f4;
+
+  border-color: #ffd8d8;
+}
+
+/* =========================================
+   CONTENT WIDTH
+========================================= */
+
+.attendance-stats,
+.attendance-table-card {
+  width: 100%;
+  max-width: 1400px;
+
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 950px) {
+
+  .club-attendance-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .club-attendance-header-user {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 750px) {
+
+  .club-attendance-page {
+    display: block;
+  }
+
+  .club-attendance-page .club-sidebar {
+    position: relative;
+
+    width: 100%;
+    height: auto;
+  }
+
+  .club-attendance-main {
+    margin-left: 0;
+
+    width: 100%;
+
+    padding: 25px 20px 40px;
+  }
+
+  .club-attendance-header h1 {
+    font-size: 27px;
+  }
+}

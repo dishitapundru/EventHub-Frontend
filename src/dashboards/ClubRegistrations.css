@@ -1,0 +1,1215 @@
+
+/* =========================================================
+   CLUB REGISTRATIONS PAGE
+   EventHub - Light Glass / Purple / Cyan Theme
+   ========================================================= */
+
+.club-registrations-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(
+      circle at 85% 10%,
+      rgba(124, 58, 237, 0.08),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 15% 90%,
+      rgba(6, 182, 212, 0.07),
+      transparent 28%
+    ),
+    #f7f8fc;
+
+  color: #29243a;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.club-registrations-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 245px;
+  height: 100vh;
+
+  padding: 24px 16px;
+
+  display: flex;
+  flex-direction: column;
+
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  border-right: 1px solid rgba(124, 58, 237, 0.1);
+
+  box-shadow:
+    8px 0 30px rgba(70, 45, 120, 0.04);
+
+  z-index: 100;
+}
+
+
+/* Logo */
+
+.club-registrations-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 4px 10px 25px;
+}
+
+.club-registrations-logo-icon {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(124, 58, 237, 0.14),
+      rgba(6, 182, 212, 0.12)
+    );
+
+  color: #6d3ce8;
+
+  box-shadow:
+    0 8px 20px rgba(124, 58, 237, 0.1);
+}
+
+.club-registrations-logo h2 {
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 750;
+
+  color: #28233a;
+}
+
+.club-registrations-logo span {
+  display: block;
+
+  margin-top: 2px;
+
+  font-size: 11px;
+  font-weight: 500;
+
+  color: #9692a7;
+}
+
+
+/* Navigation */
+
+.club-registrations-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.club-registrations-nav button {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 12px 13px;
+
+  border: none;
+  border-radius: 11px;
+
+  background: transparent;
+
+  color: #777389;
+
+  font-size: 13px;
+  font-weight: 550;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.club-registrations-nav button svg {
+  flex-shrink: 0;
+}
+
+.club-registrations-nav button:hover {
+  background: rgba(124, 58, 237, 0.065);
+  color: #6736d8;
+
+  transform: translateX(2px);
+}
+
+.club-registrations-nav button.active {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(124, 58, 237, 0.12),
+      rgba(124, 58, 237, 0.055)
+    );
+
+  color: #6838da;
+
+  box-shadow:
+    inset 3px 0 0 #7c3aed;
+}
+
+
+/* Sidebar Bottom */
+
+.club-registrations-sidebar-bottom {
+  margin-top: auto;
+
+  padding-top: 18px;
+
+  border-top: 1px solid rgba(124, 58, 237, 0.08);
+
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.club-registrations-sidebar-bottom button {
+  width: 100%;
+
+  padding: 10px 12px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: transparent;
+
+  color: #858194;
+
+  font-size: 12px;
+  font-weight: 550;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.club-registrations-sidebar-bottom button:hover {
+  background: rgba(124, 58, 237, 0.06);
+  color: #6838da;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.club-registrations-main {
+  margin-left: 245px;
+
+  min-height: 100vh;
+
+  padding: 38px 42px 50px;
+
+  max-width: 1600px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.club-registrations-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 30px;
+
+  margin-bottom: 28px;
+}
+
+.club-registrations-header h1 {
+  margin: 13px 0 6px;
+
+  font-size: 30px;
+  line-height: 1.15;
+
+  font-weight: 780;
+
+  letter-spacing: -0.7px;
+
+  color: #282238;
+}
+
+.club-registrations-header p {
+  margin: 0;
+
+  color: #918ca0;
+
+  font-size: 13px;
+}
+
+.club-registrations-header p strong {
+  color: #5d3db0;
+  font-weight: 650;
+}
+
+
+/* Back Button */
+
+.club-registrations-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 8px 11px;
+
+  border: 1px solid rgba(124, 58, 237, 0.1);
+  border-radius: 9px;
+
+  background: rgba(255, 255, 255, 0.72);
+
+  color: #777187;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.club-registrations-back:hover {
+  color: #6838da;
+
+  background: white;
+
+  border-color: rgba(124, 58, 237, 0.2);
+
+  transform: translateX(-2px);
+}
+
+
+/* =========================================================
+   TOTAL REGISTRATION CARD
+   ========================================================= */
+
+.registration-count-card {
+  min-width: 220px;
+
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  padding: 15px 18px;
+
+  border: 1px solid rgba(124, 58, 237, 0.1);
+  border-radius: 15px;
+
+  background: rgba(255, 255, 255, 0.78);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  box-shadow:
+    0 12px 35px rgba(62, 38, 110, 0.055);
+}
+
+.registration-count-icon {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(124, 58, 237, 0.13),
+      rgba(6, 182, 212, 0.1)
+    );
+
+  color: #713fe3;
+}
+
+.registration-count-card span {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #9893a5;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.registration-count-card strong {
+  display: block;
+
+  color: #33294a;
+
+  font-size: 22px;
+  line-height: 1;
+
+  font-weight: 760;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.club-registrations-error {
+  margin-bottom: 22px;
+
+  padding: 14px 17px;
+
+  border-radius: 12px;
+
+  background: rgba(239, 68, 68, 0.06);
+
+  border: 1px solid rgba(239, 68, 68, 0.13);
+
+  color: #c44747;
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   TABLE CARD
+   ========================================================= */
+
+.registrations-table-card {
+  overflow: hidden;
+
+  border: 1px solid rgba(124, 58, 237, 0.09);
+  border-radius: 18px;
+
+  background: rgba(255, 255, 255, 0.84);
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  box-shadow:
+    0 18px 50px rgba(65, 42, 112, 0.055);
+}
+
+
+/* =========================================================
+   TABLE HEADER
+   ========================================================= */
+
+.table-header {
+  min-height: 82px;
+
+  padding: 20px 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  border-bottom: 1px solid rgba(124, 58, 237, 0.08);
+}
+
+.table-header h2 {
+  margin: 0 0 5px;
+
+  color: #302841;
+
+  font-size: 17px;
+  font-weight: 720;
+}
+
+.table-header p {
+  margin: 0;
+
+  color: #9691a2;
+
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   SEARCH + TOTAL
+   ========================================================= */
+
+.registration-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.registration-search {
+  width: 280px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  padding: 0 12px;
+
+  border-radius: 10px;
+
+  background: #fafaff;
+
+  border: 1px solid rgba(124, 58, 237, 0.11);
+
+  color: #918ba0;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.registration-search:focus-within {
+  background: white;
+
+  border-color: rgba(124, 58, 237, 0.35);
+
+  box-shadow:
+    0 0 0 3px rgba(124, 58, 237, 0.06);
+}
+
+.registration-search input {
+  width: 100%;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #332b44;
+
+  font-family: inherit;
+
+  font-size: 11px;
+}
+
+.registration-search input::placeholder {
+  color: #aaa5b4;
+}
+
+.table-total {
+  min-width: 74px;
+
+  padding: 9px 11px;
+
+  border-radius: 9px;
+
+  background: rgba(124, 58, 237, 0.06);
+
+  color: #7140d5;
+
+  font-size: 11px;
+  font-weight: 650;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.registrations-table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+.registrations-table {
+  width: 100%;
+
+  min-width: 1050px;
+
+  border-collapse: collapse;
+}
+
+
+/* Table Head */
+
+.registrations-table thead {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(124, 58, 237, 0.035),
+      rgba(6, 182, 212, 0.025)
+    );
+}
+
+.registrations-table th {
+  padding: 13px 15px;
+
+  border-bottom: 1px solid rgba(124, 58, 237, 0.08);
+
+  color: #817b91;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.45px;
+
+  text-align: left;
+
+  white-space: nowrap;
+}
+
+.registrations-table th:first-child,
+.registrations-table td:first-child {
+  padding-left: 22px;
+}
+
+.registrations-table th:last-child,
+.registrations-table td:last-child {
+  padding-right: 22px;
+}
+
+.registrations-table th svg {
+  margin-right: 5px;
+
+  vertical-align: -3px;
+
+  color: #8051df;
+}
+
+
+/* Table Body */
+
+.registrations-table tbody tr {
+  transition:
+    background 0.18s ease;
+}
+
+.registrations-table tbody tr:hover {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(124, 58, 237, 0.035),
+      rgba(6, 182, 212, 0.018)
+    );
+}
+
+.registrations-table td {
+  padding: 15px;
+
+  border-bottom: 1px solid rgba(124, 58, 237, 0.055);
+
+  color: #5f596d;
+
+  font-size: 11px;
+
+  white-space: nowrap;
+}
+
+.registrations-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+/* =========================================================
+   STUDENT CELL
+   ========================================================= */
+
+.student-cell {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  min-width: 190px;
+}
+
+.student-avatar {
+  width: 34px;
+  height: 34px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(124, 58, 237, 0.15),
+      rgba(6, 182, 212, 0.12)
+    );
+
+  color: #713edc;
+
+  font-size: 12px;
+  font-weight: 750;
+
+  border: 1px solid rgba(124, 58, 237, 0.08);
+}
+
+.student-cell strong {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #393248;
+
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.student-cell span {
+  display: block;
+
+  color: #aaa5b4;
+
+  font-size: 9px;
+}
+
+
+/* =========================================================
+   EVENT NAME
+   ========================================================= */
+
+.event-name {
+  display: inline-block;
+
+  max-width: 190px;
+
+  overflow: hidden;
+
+  color: #6537c7;
+
+  font-weight: 650;
+
+  text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.club-registrations-empty {
+  min-height: 390px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 50px 20px;
+
+  border: 1px solid rgba(124, 58, 237, 0.08);
+  border-radius: 18px;
+
+  background: rgba(255, 255, 255, 0.78);
+
+  box-shadow:
+    0 18px 45px rgba(62, 38, 110, 0.045);
+
+  text-align: center;
+}
+
+.empty-icon {
+  width: 78px;
+  height: 78px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 18px;
+
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(124, 58, 237, 0.1),
+      rgba(6, 182, 212, 0.08)
+    );
+
+  color: #7545d8;
+}
+
+.club-registrations-empty h2 {
+  margin: 0 0 8px;
+
+  color: #342c44;
+
+  font-size: 19px;
+}
+
+.club-registrations-empty p {
+  max-width: 380px;
+
+  margin: 0 0 20px;
+
+  color: #9691a2;
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.club-registrations-empty button {
+  padding: 10px 17px;
+
+  border: none;
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #7540df,
+      #6940cf
+    );
+
+  color: white;
+
+  font-size: 11px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 20px rgba(117, 64, 223, 0.18);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.club-registrations-empty button:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 12px 25px rgba(117, 64, 223, 0.24);
+}
+
+
+/* =========================================================
+   NO SEARCH RESULTS
+   ========================================================= */
+
+.registration-no-results {
+  min-height: 280px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 35px;
+
+  text-align: center;
+
+  color: #9691a2;
+}
+
+.registration-no-results svg {
+  margin-bottom: 12px;
+
+  color: #9874df;
+}
+
+.registration-no-results h3 {
+  margin: 0 0 6px;
+
+  color: #3b334d;
+
+  font-size: 15px;
+}
+
+.registration-no-results p {
+  margin: 0;
+
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.club-registrations-loading {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #f7f8fc;
+
+  color: #7445d5;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+  .club-registrations-main {
+    padding: 30px 28px 40px;
+  }
+
+  .club-registrations-header {
+    align-items: flex-start;
+  }
+
+  .registration-count-card {
+    min-width: 190px;
+  }
+
+  .registration-search {
+    width: 220px;
+  }
+}
+
+
+@media (max-width: 900px) {
+
+  .club-registrations-sidebar {
+    width: 215px;
+  }
+
+  .club-registrations-main {
+    margin-left: 215px;
+
+    padding: 28px 22px 40px;
+  }
+
+  .club-registrations-header {
+    flex-direction: column;
+  }
+
+  .registration-count-card {
+    width: 100%;
+  }
+
+  .table-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .registration-tools {
+    width: 100%;
+  }
+
+  .registration-search {
+    flex: 1;
+    width: auto;
+  }
+}
+
+
+@media (max-width: 650px) {
+
+  .club-registrations-sidebar {
+    position: static;
+
+    width: 100%;
+    height: auto;
+
+    padding: 15px;
+  }
+
+  .club-registrations-logo {
+    padding-bottom: 15px;
+  }
+
+  .club-registrations-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .club-registrations-sidebar-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    margin-top: 12px;
+  }
+
+  .club-registrations-main {
+    margin-left: 0;
+
+    padding: 22px 15px 35px;
+  }
+
+  .club-registrations-header h1 {
+    font-size: 25px;
+  }
+
+  .registration-tools {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .registration-search {
+    width: auto;
+  }
+
+  .table-total {
+    align-self: flex-start;
+  }
+
+  .registrations-table-card {
+    border-radius: 14px;
+  }
+}
+
+/* =========================================================
+   FONT SIZE IMPROVEMENT
+   ========================================================= */
+
+.club-registrations-nav button {
+  font-size: 14px;
+}
+
+.club-registrations-logo h2 {
+  font-size: 20px;
+}
+
+.club-registrations-logo span {
+  font-size: 12px;
+}
+
+.club-registrations-header h1 {
+  font-size: 32px;
+}
+
+.club-registrations-header p {
+  font-size: 14px;
+}
+
+.club-registrations-back {
+  font-size: 13px;
+}
+
+.registration-count-card span {
+  font-size: 11px;
+}
+
+.registration-count-card strong {
+  font-size: 25px;
+}
+
+.table-header h2 {
+  font-size: 19px;
+}
+
+.table-header p {
+  font-size: 13px;
+}
+
+.registration-search input {
+  font-size: 13px;
+}
+
+.registration-search input::placeholder {
+  font-size: 13px;
+}
+
+.table-total {
+  font-size: 13px;
+}
+
+.registrations-table th {
+  font-size: 12px;
+}
+
+.registrations-table td {
+  font-size: 13px;
+}
+
+.student-cell strong {
+  font-size: 13px;
+}
+
+.student-cell span {
+  font-size: 11px;
+}
+
+.event-name {
+  font-size: 13px;
+}
+
+.club-registrations-empty h2 {
+  font-size: 21px;
+}
+
+.club-registrations-empty p {
+  font-size: 13px;
+}
+
+.club-registrations-empty button {
+  font-size: 13px;
+}
+
+.registration-no-results h3 {
+  font-size: 17px;
+}
+
+.registration-no-results p {
+  font-size: 13px;
+}
+/* =========================================
+   CLUB DASHBOARD LAYOUT
+========================================= */
+
+.club-registrations-page {
+  min-height: 100vh;
+  display: flex;
+  background: #f7f8fc;
+  color: #171725;
+}
+
+.club-registrations-page .club-sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+
+  width: 250px;
+  height: 100vh;
+
+  z-index: 1000;
+}
+
+.club-registrations-main {
+  margin-left: 250px;
+
+  width: calc(100% - 250px);
+  min-height: 100vh;
+
+  box-sizing: border-box;
+
+  padding: 35px 40px 50px;
+}
+
+.club-registrations-header {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 0 auto 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 25px;
+}
+
+.club-registrations-label {
+  margin: 0 0 8px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  letter-spacing: 1.2px;
+
+  color: #7655e8;
+}
+
+.club-registrations-header h1 {
+  margin: 0;
+
+  font-size: 32px;
+  font-weight: 750;
+
+  color: #171725;
+}
+
+.club-registrations-header p {
+  margin: 8px 0 0;
+
+  font-size: 14px;
+
+  color: #7d7f8f;
+}
+
+.club-registrations-header strong {
+  color: #4e456f;
+}
+
+/* =========================================
+   LOADING
+========================================= */
+
+.club-registrations-loading {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 14px;
+  color: #77798a;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+  .club-registrations-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 750px) {
+
+  .club-registrations-page {
+    display: block;
+  }
+
+  .club-registrations-page .club-sidebar {
+    position: relative;
+
+    width: 100%;
+    height: auto;
+  }
+
+  .club-registrations-main {
+    margin-left: 0;
+
+    width: 100%;
+
+    padding: 25px 20px 40px;
+  }
+
+  .club-registrations-header h1 {
+    font-size: 27px;
+  }
+}

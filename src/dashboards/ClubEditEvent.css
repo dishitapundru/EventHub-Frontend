@@ -1,0 +1,451 @@
+
+/* =========================================
+   CLUB EDIT EVENT
+========================================= */
+
+.club-edit-event-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(124, 58, 237, 0.10), transparent 30%),
+    radial-gradient(circle at 90% 85%, rgba(6, 182, 212, 0.10), transparent 30%),
+    #f7f8fc;
+  color: #1f2937;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* SIDEBAR */
+
+.club-edit-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100vh;
+  box-sizing: border-box;
+  padding: 26px 16px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(124, 58, 237, 0.10);
+  box-shadow: 8px 0 30px rgba(76, 29, 149, 0.06);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+}
+
+/* LOGO */
+
+.club-edit-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 10px 28px;
+  border-bottom: 1px solid rgba(124, 58, 237, 0.08);
+  margin-bottom: 22px;
+}
+
+.club-edit-logo-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  background: linear-gradient(135deg, #7c3aed, #06b6d4);
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.22);
+}
+
+.club-edit-logo h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  background: linear-gradient(90deg, #7c3aed, #0891b2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.club-edit-logo span {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #8b5cf6;
+}
+
+/* NAV */
+
+.club-edit-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.club-edit-nav button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #5b6475;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.25s ease;
+}
+
+.club-edit-nav button:hover {
+  background: rgba(124, 58, 237, 0.07);
+  color: #7c3aed;
+  transform: translateX(3px);
+}
+
+.club-edit-nav button.active {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(124, 58, 237, 0.13),
+      rgba(6, 182, 212, 0.08)
+    );
+  color: #6d28d9;
+}
+
+/* SIDEBAR BOTTOM */
+
+.club-edit-sidebar-bottom {
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid rgba(124, 58, 237, 0.08);
+}
+
+.club-edit-sidebar-bottom button {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 11px 14px;
+  border-radius: 11px;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.club-edit-sidebar-bottom button:hover {
+  background: rgba(6, 182, 212, 0.07);
+  color: #0891b2;
+}
+
+/* MAIN */
+
+.club-edit-main {
+  margin-left: 250px;
+  min-height: 100vh;
+  padding: 42px 48px 60px;
+  box-sizing: border-box;
+}
+
+/* HEADER */
+
+.club-edit-header {
+  max-width: 1000px;
+  margin-bottom: 28px;
+}
+
+.club-edit-header h1 {
+  margin: 18px 0 5px;
+  font-size: 32px;
+  font-weight: 800;
+  background: linear-gradient(90deg, #6d28d9, #0891b2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.club-edit-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.club-edit-header strong {
+  color: #7c3aed;
+}
+
+/* BACK */
+
+.edit-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: none;
+  background: transparent;
+  padding: 7px 0;
+  color: #6d28d9;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.edit-back-button:hover {
+  color: #0891b2;
+  transform: translateX(-3px);
+}
+
+/* CARD */
+
+.club-edit-card {
+  width: 100%;
+  max-width: 1000px;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.90);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(124, 58, 237, 0.10);
+  border-radius: 22px;
+  padding: 30px;
+  box-shadow:
+    0 18px 45px rgba(76, 29, 149, 0.07),
+    0 4px 15px rgba(6, 182, 212, 0.04);
+}
+
+/* HEADING */
+
+.club-edit-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 25px;
+  margin-bottom: 26px;
+  border-bottom: 1px solid rgba(124, 58, 237, 0.09);
+}
+
+.edit-heading-icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7c3aed;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(124, 58, 237, 0.12),
+      rgba(6, 182, 212, 0.10)
+    );
+}
+
+.club-edit-card-heading h2 {
+  margin: 0 0 5px;
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.club-edit-card-heading p {
+  margin: 0;
+  color: #7a8190;
+  font-size: 13px;
+}
+
+/* FORM */
+
+.club-edit-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.edit-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.edit-form-group label {
+  color: #374151;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.edit-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* INPUT */
+
+.edit-input-wrapper {
+  width: 100%;
+  min-height: 48px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid #e1e5ef;
+  background: #fafbff;
+  transition: all 0.25s ease;
+}
+
+.edit-input-wrapper svg {
+  flex-shrink: 0;
+  color: #8b5cf6;
+}
+
+.edit-input-wrapper:focus-within {
+  border-color: #8b5cf6;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.08);
+}
+
+.edit-input-wrapper input {
+  width: 100%;
+  height: 46px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #1f2937;
+  font-size: 14px;
+}
+
+.edit-input-wrapper input::placeholder {
+  color: #a1a7b3;
+}
+
+/* MESSAGES */
+
+.edit-event-error,
+.edit-event-success {
+  padding: 13px 15px;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.edit-event-error {
+  background: rgba(239, 68, 68, 0.07);
+  border: 1px solid rgba(239, 68, 68, 0.14);
+  color: #dc2626;
+}
+
+.edit-event-success {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  color: #059669;
+}
+
+/* ACTIONS */
+
+.club-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(124, 58, 237, 0.09);
+}
+
+.edit-cancel-button,
+.edit-save-button {
+  min-height: 45px;
+  padding: 0 20px;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.edit-cancel-button {
+  border: 1px solid #dfe3ec;
+  background: white;
+  color: #6b7280;
+}
+
+.edit-cancel-button:hover {
+  border-color: #c4b5fd;
+  color: #6d28d9;
+}
+
+.edit-save-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  color: white;
+  background: linear-gradient(135deg, #7c3aed, #06b6d4);
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.18);
+}
+
+.edit-save-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(124, 58, 237, 0.23);
+}
+
+.edit-save-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* LOADING */
+
+.club-edit-loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7c3aed;
+  font-weight: 700;
+  background: #f7f8fc;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 760px) {
+  .club-edit-sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid rgba(124, 58, 237, 0.10);
+  }
+
+  .club-edit-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .club-edit-main {
+    margin-left: 0;
+    padding: 28px 20px 40px;
+  }
+
+  .edit-form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .club-edit-card {
+    padding: 20px;
+  }
+
+  .club-edit-header h1 {
+    font-size: 27px;
+  }
+
+  .club-edit-actions {
+    flex-direction: column-reverse;
+  }
+
+  .edit-cancel-button,
+  .edit-save-button {
+    width: 100%;
+  }
+}

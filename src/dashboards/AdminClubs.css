@@ -1,0 +1,782 @@
+
+@import url("./AdminEvents.css");
+
+/* =========================================================
+   MANAGE CLUBS PAGE
+   ========================================================= */
+
+.admin-module-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  background: #f7f8fc;
+  color: #17172b;
+  font-family: Arial, sans-serif;
+}
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.admin-module-main {
+  width: calc(100% - 250px);
+  min-height: 100vh;
+  margin-left: 250px;
+  padding: 38px 42px 55px;
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.admin-module-header {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 25px;
+  margin-bottom: 28px;
+}
+
+.admin-module-header > div:first-child {
+  min-width: 0;
+}
+
+.admin-module-kicker {
+  display: block;
+  margin-bottom: 8px;
+  color: #7c3aed;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+}
+
+.admin-module-header h1 {
+  margin: 0;
+  color: #27273d;
+  font-size: 34px;
+  line-height: 1.15;
+  letter-spacing: -0.6px;
+}
+
+.admin-module-header p {
+  margin: 9px 0 0;
+  color: #8b8c9f;
+  font-size: 15px;
+}
+
+/* =========================================================
+   CREATE CLUB BUTTON
+   ========================================================= */
+
+.admin-module-header .admin-primary-button {
+  flex-shrink: 0;
+
+  min-height: 44px;
+  padding: 0 18px;
+
+  border: none;
+  border-radius: 11px;
+
+  background: linear-gradient(
+    135deg,
+    #6d5dfc,
+    #7c3aed
+  );
+
+  color: white;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 20px rgba(124, 58, 237, 0.18);
+
+  transition: 0.2s ease;
+}
+
+.admin-module-header .admin-primary-button:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 12px 25px rgba(124, 58, 237, 0.25);
+}
+
+/* =========================================================
+   CREATE / EDIT CLUB FORM
+   ========================================================= */
+
+.admin-club-form-card {
+  width: 100%;
+  box-sizing: border-box;
+
+  background: rgba(255, 255, 255, 0.9);
+
+  border:
+    1px solid rgba(124, 58, 237, 0.08);
+
+  border-radius: 18px;
+
+  padding: 25px;
+
+  margin-bottom: 20px;
+
+  box-shadow:
+    0 12px 35px rgba(35, 25, 80, 0.05);
+
+  backdrop-filter: blur(18px);
+}
+
+.admin-club-form-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 24px;
+}
+
+.admin-club-form-header h2 {
+  margin: 4px 0 0;
+
+  color: #27273d;
+
+  font-size: 21px;
+}
+
+.admin-club-form-header p {
+  margin: 7px 0 0;
+
+  color: #8b8c9f;
+
+  font-size: 13px;
+}
+
+.admin-form-close {
+  width: 36px;
+  height: 36px;
+
+  flex-shrink: 0;
+
+  border: none;
+  border-radius: 10px;
+
+  background: rgba(239, 68, 68, 0.07);
+
+  color: #ef4444;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.admin-form-close:hover {
+  background: rgba(239, 68, 68, 0.14);
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   FORM GRID
+   ========================================================= */
+
+.admin-club-form {
+  width: 100%;
+}
+
+.admin-club-form-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 18px;
+}
+
+.admin-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.admin-form-group label {
+  color: #55566d;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.admin-form-group input,
+.admin-form-group select {
+  width: 100%;
+  height: 46px;
+
+  box-sizing: border-box;
+
+  border:
+    1px solid rgba(124, 58, 237, 0.12);
+
+  border-radius: 11px;
+
+  background: #f8f8fc;
+
+  padding: 0 13px;
+
+  outline: none;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  color: #222238;
+
+  transition: 0.2s ease;
+}
+
+.admin-form-group input:focus,
+.admin-form-group select:focus {
+  border-color:
+    rgba(109, 93, 252, 0.55);
+
+  background: white;
+
+  box-shadow:
+    0 0 0 4px rgba(109, 93, 252, 0.08);
+}
+
+.admin-form-group input::placeholder {
+  color: #a4a5b4;
+}
+
+.admin-form-group select {
+  cursor: pointer;
+}
+
+/* =========================================================
+   FORM ACTIONS
+   ========================================================= */
+
+.admin-club-form-actions {
+  display: flex;
+
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  margin-top: 22px;
+  padding-top: 18px;
+
+  border-top:
+    1px solid rgba(124, 58, 237, 0.08);
+}
+
+.admin-club-form-actions button {
+  min-height: 42px;
+
+  padding: 0 17px;
+
+  border-radius: 10px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+/* =========================================================
+   MAIN CLUB CARD
+   ========================================================= */
+
+.admin-module-card {
+  width: 100%;
+  min-width: 0;
+
+  box-sizing: border-box;
+
+  background: rgba(255, 255, 255, 0.9);
+
+  border:
+    1px solid rgba(124, 58, 237, 0.08);
+
+  border-radius: 18px;
+
+  padding: 23px;
+
+  box-shadow:
+    0 12px 35px rgba(35, 25, 80, 0.05);
+
+  backdrop-filter: blur(18px);
+}
+
+/* =========================================================
+   TOOLBAR
+   ========================================================= */
+
+.admin-card-toolbar {
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 22px;
+}
+
+.admin-card-toolbar > div:first-child {
+  min-width: 0;
+}
+
+.admin-card-toolbar h2 {
+  margin: 0;
+
+  color: #27273d;
+
+  font-size: 21px;
+}
+
+.admin-card-toolbar span {
+  display: block;
+
+  margin-top: 5px;
+
+  color: #999aaa;
+
+  font-size: 12px;
+}
+
+/* =========================================================
+   SEARCH BOX
+   ========================================================= */
+
+.admin-search-box {
+  width: 320px;
+  height: 44px;
+
+  flex-shrink: 0;
+
+  box-sizing: border-box;
+
+  padding: 0 13px;
+
+  border:
+    1px solid rgba(124, 58, 237, 0.12);
+
+  border-radius: 12px;
+
+  background: white;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  color: #9293a4;
+}
+
+.admin-search-box:focus-within {
+  border-color:
+    rgba(124, 58, 237, 0.35);
+
+  box-shadow:
+    0 0 0 3px rgba(124, 58, 237, 0.06);
+}
+
+.admin-search-box input {
+  width: 100%;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #222238;
+
+  font-family: inherit;
+
+  font-size: 14px;
+}
+
+.admin-search-box input::placeholder {
+  color: #a1a2b2;
+}
+
+/* =========================================================
+   CLUB TABLE
+   ========================================================= */
+
+.admin-club-table {
+  width: 100%;
+
+  overflow-x: auto;
+
+  box-sizing: border-box;
+}
+
+.admin-club-table .admin-table-header,
+.admin-club-table .admin-table-row {
+  min-width: 850px;
+
+  display: grid;
+
+  grid-template-columns:
+    2fr
+    1.25fr
+    1fr
+    0.9fr
+    0.85fr;
+
+  align-items: center;
+
+  column-gap: 16px;
+
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   TABLE HEADER
+   ========================================================= */
+
+.admin-club-table .admin-table-header {
+  min-height: 42px;
+
+  padding: 0 13px;
+
+  border-bottom:
+    1px solid rgba(124, 58, 237, 0.08);
+
+  color: #999aaa;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.8px;
+}
+
+/* =========================================================
+   TABLE ROW
+   ========================================================= */
+
+.admin-club-table .admin-table-row {
+  min-height: 78px;
+
+  padding: 14px 13px;
+
+  border-bottom:
+    1px solid rgba(124, 58, 237, 0.07);
+
+  color: #66677b;
+
+  font-size: 13px;
+
+  transition: 0.2s ease;
+}
+
+.admin-club-table .admin-table-row:hover {
+  background:
+    rgba(124, 58, 237, 0.025);
+}
+
+/* =========================================================
+   CLUB NAME
+   ========================================================= */
+
+.admin-club-name-cell {
+  min-width: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+}
+
+.admin-club-icon {
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #6d5dfc,
+      #7c3aed
+    );
+
+  color: white;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  box-shadow:
+    0 6px 15px rgba(124, 58, 237, 0.16);
+}
+
+.admin-club-name-cell > div:last-child {
+  min-width: 0;
+}
+
+.admin-club-name-cell strong {
+  display: block;
+
+  color: #27273d;
+
+  font-size: 14px;
+
+  font-weight: 750;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+.admin-club-name-cell span {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #999aaa;
+
+  font-size: 11px;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+/* =========================================================
+   CATEGORY
+   ========================================================= */
+
+.admin-category {
+  color: #66677b;
+
+  font-size: 13px;
+
+  font-weight: 500;
+}
+
+/* =========================================================
+   MEMBERS
+   ========================================================= */
+
+.admin-members {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  color: #66677b;
+
+  font-size: 13px;
+
+  font-weight: 500;
+}
+
+.admin-members svg {
+  color: #7c3aed;
+}
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.admin-status-badge {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 7px 11px;
+
+  border-radius: 20px;
+
+  background:
+    rgba(16, 185, 129, 0.09);
+
+  color: #059669;
+
+  font-size: 10px;
+
+  font-weight: 800;
+}
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.admin-row-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+.admin-edit-button,
+.admin-delete-button {
+  width: 35px;
+  height: 35px;
+
+  border: none;
+
+  border-radius: 9px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.admin-edit-button {
+  color: #0891b2;
+
+  background:
+    rgba(6, 182, 212, 0.08);
+}
+
+.admin-edit-button:hover {
+  background:
+    rgba(6, 182, 212, 0.16);
+
+  transform: translateY(-1px);
+}
+
+.admin-delete-button {
+  color: #ef4444;
+
+  background:
+    rgba(239, 68, 68, 0.08);
+}
+
+.admin-delete-button:hover {
+  background:
+    rgba(239, 68, 68, 0.15);
+
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   LOADING / EMPTY
+   ========================================================= */
+
+.admin-club-table .admin-table-row > span {
+  color: #8b8c9f;
+
+  font-size: 13px;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1050px) {
+  .admin-module-main {
+    padding: 32px 28px 45px;
+  }
+}
+
+@media (max-width: 800px) {
+  .admin-module-page {
+    display: block;
+  }
+
+  .admin-module-page .admin-sidebar {
+    position: relative;
+
+    width: 100%;
+    height: auto;
+  }
+
+  .admin-module-main {
+    width: 100%;
+
+    margin-left: 0;
+
+    padding: 28px 22px 45px;
+  }
+
+  .admin-module-header {
+    flex-direction: column;
+  }
+
+  .admin-module-header .admin-primary-button {
+    width: fit-content;
+  }
+
+  .admin-card-toolbar {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .admin-search-box {
+    width: 100%;
+  }
+
+  .admin-club-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 550px) {
+  .admin-module-main {
+    padding: 22px 16px 35px;
+  }
+
+  .admin-module-header h1 {
+    font-size: 28px;
+  }
+
+  .admin-module-card {
+    padding: 17px;
+  }
+
+  .admin-club-form-card {
+    padding: 17px;
+  }
+
+  .admin-club-form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .admin-club-form-actions button {
+    width: 100%;
+  }
+
+  .admin-club-table .admin-table-header,
+  .admin-club-table .admin-table-row {
+    min-width: 780px;
+  }
+}
